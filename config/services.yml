@@ -1,0 +1,23 @@
+services:
+    sylver35.ajaxchecks.listener:
+        class: sylver35\ajaxchecks\event\listener
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@auth'
+            - '@language'
+            - '@ext.manager'
+            - '@path_helper'
+        tags:
+            - { name: event.listener }
+    sylver35.ajaxchecks.controller:
+        class: sylver35\ajaxchecks\controller\controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@user'
+            - '@language'
+            - '@passwords.manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'

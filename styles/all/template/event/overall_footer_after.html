@@ -1,0 +1,24 @@
+{% if S_IN_AJAX_CHECKS %}
+<script>
+var config = {
+	email : {% if S_CHANGE_EMAIL_ON %}true{% else %}false{% endif %},
+	password : {% if S_CHANGE_PASSWORD_ON %}true{% else %}false{% endif %},
+	details : {% if S_IN_AJAX_CHECKS_DETAILS %}true{% else %}false{% endif %},
+	register : {% if S_IN_AJAX_CHECKS_REGISTER %}true{% else %}false{% endif %},
+	file : '{{ AJAX_CHECKS_FILE }}',
+	path : '{{ AJAX_CHECKS_PATH }}'
+};
+var ajaxLang = {
+	'CHECKING' : '{{ lang("AJAX_CHECKING") | escape("js") }}',
+	'USERNAME' : '{{ lang("AJAX_CHECKING_USERNAME") | escape("js") }}',
+	'PASSWORD' : '{{ lang("AJAX_CHECKING_PASSWORD") | escape("js") }}',
+	'PASSWORD_CUR' : '{{ lang("AJAX_CHECKING_PASSWORD_CUR") | escape("js") }}',
+	'PASSWORD_EMPTY' : '{{ lang("CUR_PASSWORD_EMPTY") | escape("js") }}',
+	'EMAIL' : '{{ lang("AJAX_CHECKING_EMAIL") | escape("js") }}',
+	'FROM' : '{{ lang("AJAX_CHECK_FROM") | escape("js") }}',
+	'DISPLAY' : '{{ lang("AJAX_CHECK_DISPLAY") | escape("js") }}',
+	'HIDE' : '{{ lang("AJAX_CHECK_HIDE") | escape("js") }}',
+};
+</script>
+{% INCLUDEJS '@sylver35_ajaxchecks/javascript/ajaxchecks.js' %}
+{% endif %}
