@@ -14,6 +14,7 @@ use phpbb\request\request;
 use phpbb\user;
 use phpbb\language\language;
 use phpbb\passwords\manager;
+use phpbb\json_response;
 
 class controller
 {
@@ -228,7 +229,7 @@ class controller
 	 *
 	 * @param string		$mode
 	 * @param string		$username
-	 * @return bool
+	 * @return void
 	 * @access private
 	 */
 	private function verify_username($mode, $username)
@@ -240,16 +241,12 @@ class controller
 		if ($checkresult !== false)
 		{
 			$this->return_content($mode, $checkresult . '_USERNAME');
-			return true;
 		}
 		else
 		{
 			// if username doesn't exist and respect all the obligations
 			$this->return_content($mode, 'AJAX_CHECK_USERNAME_TRUE', 'icon_ajax_true.png', 2);
-			return true;
 		}
-
-		return false;
 	}
 
 	/**
@@ -339,7 +336,7 @@ class controller
 		{
 			// Check the "strength" of the password and show an image accordingly
 			$strength = $this->check_password_strength($password1);
-			$this->return_content($mode, $strength['content'], $strength['image'], $strength['number']+2, '', $strength['title']);
+			$this->return_content($mode, $strength['content'], $strength['image'], $strength['number'] + 2, '', $strength['title']);
 			return true;
 		}
 		else if ($password2 !== false)

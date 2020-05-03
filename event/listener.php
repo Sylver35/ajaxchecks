@@ -52,15 +52,15 @@ class listener implements EventSubscriberInterface
 	 */
 	public function __construct(config $config, helper $helper, template $template, auth $auth, language $language, manager $ext_manager, path_helper $path_helper)
 	{
-		$this->config			= $config;
-		$this->helper			= $helper;
-		$this->template			= $template;
-		$this->auth				= $auth;
-		$this->language			= $language;
-		$this->ext_manager		= $ext_manager;
-		$this->path_helper		= $path_helper;
-		$this->ext_path			= $this->ext_manager->get_extension_path('sylver35/ajaxchecks', true);
-		$this->ext_path_web		= $this->path_helper->update_web_root_path($this->ext_path);
+		$this->config = $config;
+		$this->helper = $helper;
+		$this->template = $template;
+		$this->auth = $auth;
+		$this->language = $language;
+		$this->ext_manager = $ext_manager;
+		$this->path_helper = $path_helper;
+		$this->ext_path = $this->ext_manager->get_extension_path('sylver35/ajaxchecks', true);
+		$this->ext_path_web = $this->path_helper->update_web_root_path($this->ext_path);
 	}
 
 	/**
