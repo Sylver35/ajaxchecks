@@ -5,6 +5,11 @@
  * @license		http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
 
+/** global: config */
+var config = {};
+/** global: ajaxLang */
+var ajaxLang = {};
+/** global: checks */
 var checks = {
 	block : 'block',
 	inline : (config.register) ? 'inline' : 'block',
