@@ -71,7 +71,7 @@ class controller
 		$this->language->add_lang('ajaxchecks', 'sylver35/ajaxchecks');
 		$this->language->add_lang('ucp');
 
-		if (!function_exists('validate_username'))
+		if (!function_exists('validate_username') || !function_exists('validate_user_email'))
 		{
 			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 		}
