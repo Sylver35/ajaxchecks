@@ -75,6 +75,10 @@ class controller
 		{
 			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 		}
+		if (!function_exists('utf8_clean_string'))
+		{
+			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
+		}
 
 		switch ($mode)
 		{
@@ -234,6 +238,11 @@ class controller
 	 */
 	private function verify_username($mode, $username)
 	{
+		if (!function_exists('validate_username'))
+		{
+			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		}
+
 		// Check that the username given has not already been used
 		$checkresult = validate_username($username);
 		// Check if it the username is ok (false means it is)
@@ -260,6 +269,11 @@ class controller
 	 */
 	private function verify_password($mode, $password1, $password2 = false)
 	{
+		if (!function_exists('utf8_clean_string'))
+		{
+			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
+		}
+
 		$length1 = strlen($password1);
 		// if password1 is too small
 		if ($length1 < $this->config['min_pass_chars'])
@@ -267,6 +281,8 @@ class controller
 			$this->return_content($mode, 'TOO_SHORT_NEW_PASSWORD');
 			return true;
 		}
+		
+
 		if ($mode == 'oldpassword')
 		{
 			// The two passwords are identical ?
@@ -324,6 +340,15 @@ class controller
 	 */
 	private function validation_password($mode, $password1, $password2 = false, $strenght = false)
 	{
+		if (!function_exists('validate_password'))
+		{
+			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		}
+		if (!function_exists('utf8_clean_string'))
+		{
+			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
+		}
+
 		$checkresult = validate_password($password1);
 		// Check if the password is ok (false means it is)
 		if ($checkresult !== false)
