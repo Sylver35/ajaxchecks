@@ -40,31 +40,31 @@ class controller
 
 	/**
 	 * Controller constructor
-	*/
-	public function __construct(config $config, request $request, user $user, language $language, manager $passwords_manager, $root_path, $php_ext)
+	 */
+	public function __construct(config $config, request $request, user $user, language $language, manager $passwords_manager, string $root_path, string $php_ext)
 	{
-		$this->config				= $config;
-		$this->request				= $request;
-		$this->user					= $user;
-		$this->language				= $language;
-		$this->passwords_manager	= $passwords_manager;
-		$this->root_path			= $root_path;
-		$this->php_ext				= $php_ext;
+		$this->config = $config;
+		$this->request = $request;
+		$this->user = $user;
+		$this->language = $language;
+		$this->passwords_manager = $passwords_manager;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;
 	}
 
 	/**
-	* data checks according to configuration
-	*
-	* @return void
-	* @access public
-	*/
+	 * data checks according to configuration
+	 *
+	 * @return void
+	 * @access public
+	 */
 	public function ajax()
 	{
-		$mode		= $this->request->variable('mode', '');
-		$username	= $this->request->variable('username', '', true);
-		$email		= $this->request->variable('email', '', true);
-		$password1	= $this->request->variable('password1', '', true);
-		$password2	= $this->request->variable('password2', '', true);
+		$mode = $this->request->variable('mode', '');
+		$username = $this->request->variable('username', '', true);
+		$email = $this->request->variable('email', '', true);
+		$password1 = $this->request->variable('password1', '', true);
+		$password2 = $this->request->variable('password2', '', true);
 
 		// Load needed language data
 		$this->language->add_lang('ajaxchecks', 'sylver35/ajaxchecks');
@@ -91,7 +91,7 @@ class controller
 					break;
 				}
 				// it's actual username?
-				if (utf8_case_fold_nfc($username) === utf8_case_fold_nfc($this->user->data['username']))
+				if (utf8_clean_string($username) === utf8_clean_string($this->user->data['username']))
 				{
 					$this->return_content($mode, 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true.png', 2);
 					break;
@@ -102,11 +102,13 @@ class controller
 			case 'checkemail':
 				// Verify the length
 				$length = strlen($email);
-				if ($length < 6)// Don't check it before
+				// Don't check it before
+				if ($length < 6)
 				{
 					break;
 				}
-				if ($length < 9)// if email is too small
+				// if email is too small
+				if ($length < 9)
 				{
 					$this->return_content($mode, 'TOO_SHORT_EMAIL');
 					break;
@@ -117,9 +119,9 @@ class controller
 				if ($checkresult !== false)
 				{
 					// Failed the email validation
-					$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', false, false, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $this->language->lang($checkresult . '_EMAIL')));
+					$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $this->language->lang($checkresult . '_EMAIL')));
 				}
-				else if ($this->user->data['is_registered'] && (utf8_case_fold_nfc($email) === utf8_case_fold_nfc($this->user->data['user_email'])))
+				else if ($this->user->data['is_registered'] && (utf8_clean_string($email) === utf8_clean_string($this->user->data['user_email'])))
 				{
 					// Only in page profile & mode reg_details for the current email in use
 					$this->return_content($mode, 'AJAX_CHECK_EMAIL_CURRENT', 'icon_ajax_true.png', 2);
@@ -169,38 +171,39 @@ class controller
 	}
 
 	/**
-	* Send the array to the browser
-	* @param string		$mode
-	* @param string		$value
-	* @param string		$image
-	* @param int		$type
-	* @param string		$reason
-	* @param string		$strength
-	* @return void
-	* @access private
-	*/
-	private function return_content($mode, $value, $image = false, $type = false, $reason = false, $strength = false)
+	 * Send the array to the browser
+	 *
+	 * @param string		$mode
+	 * @param string		$value
+	 * @param string		$image
+	 * @param int			$type
+	 * @param string		$reason
+	 * @param string		$strength
+	 * @return void
+	 * @access private
+	 */
+	private function return_content($mode, $value, $image = '', $type = 0, $reason = '', $strength = '')
 	{
 		$response = new \phpbb\json_response;
 
 		$response->send(array(
 			'mode'		=> $mode,
 			'content'	=> $this->language->lang($value),
-			'image'		=> ($image !== false) ? $image : 'icon_ajax_false.png',
-			'type'		=> ($type !== false) ? $type : 1,
-			'reason'	=> ($reason !== false) ? $reason : '',
-			'strength'	=> ($strength !== false) ? $this->language->lang($strength) : false,
+			'image'		=> ($image !== '') ? $image : 'icon_ajax_false.png',
+			'type'		=> ($type !== 0) ? $type : 1,
+			'reason'	=> ($reason !== '') ? $reason : '',
+			'strength'	=> ($strength !== '') ? $this->language->lang($strength) : false,
 		), true);
 	}
 
 	/**
-	* Verify the length of username
-	*
-	* @param string		$mode
-	* @param string		$username
-	* @return bool
-	* @access private
-	*/
+	 * Verify the length of username
+	 *
+	 * @param string		$mode
+	 * @param string		$username
+	 * @return bool
+	 * @access private
+	 */
 	private function verify_length($mode, $username)
 	{
 		$length = strlen($username);
@@ -221,13 +224,13 @@ class controller
 	}
 
 	/**
-	* Verify if username respect all the obligations
-	*
-	* @param string		$mode
-	* @param string		$username
-	* @return bool
-	* @access private
-	*/
+	 * Verify if username respect all the obligations
+	 *
+	 * @param string		$mode
+	 * @param string		$username
+	 * @return bool
+	 * @access private
+	 */
 	private function verify_username($mode, $username)
 	{
 		// Check that the username given has not already been used
@@ -250,14 +253,14 @@ class controller
 	}
 
 	/**
-	* Verify length of passwords
-	*
-	* @param string		$mode
-	* @param string		$password1
-	* @param string		$password2
-	* @return bool
-	* @access private
-	*/
+	 * Verify length of passwords
+	 *
+	 * @param string		$mode
+	 * @param string		$password1
+	 * @param string		$password2
+	 * @return bool
+	 * @access private
+	 */
 	private function verify_password($mode, $password1, $password2 = false)
 	{
 		$length1 = strlen($password1);
@@ -270,7 +273,7 @@ class controller
 		if ($mode == 'oldpassword')
 		{
 			// The two passwords are identical ?
-			if (utf8_case_fold_nfc($password1) === utf8_case_fold_nfc($password2))
+			if (utf8_clean_string($password1) === utf8_clean_string($password2))
 			{
 				// If the second is the same as the current one
 				$check_password = $this->passwords_manager->check($password2, $this->user->data['user_password']);
@@ -315,13 +318,13 @@ class controller
 	}
 
 	/**
-	* Check the password doesn't contain any illegal chars etc.
-	*
-	* @param string		$mode
-	* @param string		$password
-	* @return bool
-	* @access private
-	*/
+	 * Check the password doesn't contain any illegal chars etc.
+	 *
+	 * @param string		$mode
+	 * @param string		$password
+	 * @return bool
+	 * @access private
+	 */
 	private function validation_password($mode, $password1, $password2 = false, $strenght = false)
 	{
 		$checkresult = validate_password($password1);
@@ -336,13 +339,13 @@ class controller
 		{
 			// Check the "strength" of the password and show an image accordingly
 			$strength = $this->check_password_strength($password1);
-			$this->return_content($mode, $strength['content'], $strength['image'], $strength['number']+2, false, $strength['title']);
+			$this->return_content($mode, $strength['content'], $strength['image'], $strength['number']+2, '', $strength['title']);
 			return true;
 		}
 		else if ($password2 !== false)
 		{
 			// Check if first and second passwords are the same
-			if (utf8_case_fold_nfc($password1) === utf8_case_fold_nfc($password2))
+			if (utf8_clean_string($password1) === utf8_clean_string($password2))
 			{
 				// Passwords are the same, show a correct message
 				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_TRUE', 'icon_ajax_true.png', 2);
@@ -360,13 +363,13 @@ class controller
 	}
 
 	/**
-	* Check if the password is ok
-	*
-	* @param string		$mode
-	* @param string		$password
-	* @return void
-	* @access private
-	*/
+	 * Check if the password is ok
+	 *
+	 * @param string		$mode
+	 * @param string		$password
+	 * @return void
+	 * @access private
+	 */
 	private function check_password($mode, $password)
 	{
 		$check_password = $this->passwords_manager->check($password, $this->user->data['user_password'], $this->user->data);
@@ -399,12 +402,12 @@ class controller
 	}
 
 	/**
-	* Check the "strength" of the password and show an image and color text accordingly
-	*
-	* @param string $password
-	* @return array
-	* @access private
-	*/
+	 * Check the "strength" of the password and show an image and color text accordingly
+	 *
+	 * @param string $password
+	 * @return array
+	 * @access private
+	 */
 	private function check_password_strength($password)
 	{
 		$number = 0;
