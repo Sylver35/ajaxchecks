@@ -8,7 +8,6 @@
  */
 
 namespace sylver35\ajaxchecks\event;
-
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use phpbb\config\config;
 use phpbb\controller\helper;
