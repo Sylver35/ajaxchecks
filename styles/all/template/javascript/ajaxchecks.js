@@ -6,9 +6,7 @@
 */
 
 /** global: config */
-var config = {};
 /** global: ajaxLang */
-var ajaxLang = {};
 /** global: checks */
 var checks = {
 	block : 'block',
@@ -183,9 +181,6 @@ var checks = {
 				}else{
 					return;
 				}
-			break;
-			default:
-				return;
 			break;
 		}
 		// Verify actual password
