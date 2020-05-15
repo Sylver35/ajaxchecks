@@ -95,10 +95,8 @@ class controller
 			break;
 
 			case 'checkemail':
-				// Verify the length
-				$length = strlen($email);
 				// if email is too small
-				if ($length < 9)
+				if (strlen($email) < 9)
 				{
 					$this->return_content($mode, 'TOO_SHORT_EMAIL');
 					break;
@@ -109,7 +107,7 @@ class controller
 				if ($checkresult !== false)
 				{
 					// Failed the email validation
-					$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $this->language->lang($checkresult . '_EMAIL')));
+					$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $this->language->lang((string) $checkresult . '_EMAIL')));
 				}
 				else if ($this->user->data['is_registered'] && ($this->clean_string($email) === $this->clean_string($this->user->data['user_email'])))
 				{
@@ -297,7 +295,7 @@ class controller
 		// if the username already exists, not banned or does not respect all the obligations
 		if ($checkresult !== false)
 		{
-			$this->return_content($mode, $checkresult . '_USERNAME');
+			$this->return_content($mode, (string) $checkresult . '_USERNAME');
 		}
 		else
 		{
@@ -329,7 +327,7 @@ class controller
 		if ($mode == 'oldpassword')
 		{
 			// The two passwords are identical ?
-			if ($this->clean_string($password1) === $this->clean_string($password2))
+			if ($this->clean_string($password1) === $this->clean_string((string) $password2))
 			{
 				// If the second is the same as the current one
 				$check_password = $this->passwords_manager->check($password2, $this->user->data['user_password']);
@@ -390,7 +388,7 @@ class controller
 		if ($checkresult !== false)
 		{
 			// Failed the password validation
-			$this->return_content($mode, $checkresult . '_NEW_PASSWORD');
+			$this->return_content($mode, (string) $checkresult . '_NEW_PASSWORD');
 			return true;
 		}
 		else if ($power !== false)
