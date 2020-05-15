@@ -8,7 +8,6 @@
  */
 
 namespace sylver35\ajaxchecks\controller;
-
 use phpbb\config\config;
 use phpbb\request\request;
 use phpbb\user;
@@ -71,15 +70,6 @@ class controller
 		$this->language->add_lang('ajaxchecks', 'sylver35/ajaxchecks');
 		$this->language->add_lang('ucp');
 
-		if (!function_exists('validate_username') || !function_exists('validate_user_email'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-		if (!function_exists('utf8_clean_string'))
-		{
-			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
-		}
-
 		switch ($mode)
 		{
 			case 'usernamecheck':
@@ -96,7 +86,7 @@ class controller
 					break;
 				}
 				// it's actual username?
-				if (utf8_clean_string($username) === utf8_clean_string($this->user->data['username']))
+				if ($this->clean_string($username) === $this->clean_string($this->user->data['username']))
 				{
 					$this->return_content($mode, 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true.png', 2);
 					break;
@@ -107,11 +97,6 @@ class controller
 			case 'checkemail':
 				// Verify the length
 				$length = strlen($email);
-				// Don't check it before
-				if ($length < 6)
-				{
-					break;
-				}
 				// if email is too small
 				if ($length < 9)
 				{
@@ -119,14 +104,14 @@ class controller
 					break;
 				}
 				// Check the email is not in use, has the correct format, is for a "real" domain, etc.
-				$checkresult = validate_user_email($email);
+				$checkresult = $this->validation_email($email);
 				// Check if it the email is ok (false means it is)
 				if ($checkresult !== false)
 				{
 					// Failed the email validation
 					$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $this->language->lang($checkresult . '_EMAIL')));
 				}
-				else if ($this->user->data['is_registered'] && (utf8_clean_string($email) === utf8_clean_string($this->user->data['user_email'])))
+				else if ($this->user->data['is_registered'] && ($this->clean_string($email) === $this->clean_string($this->user->data['user_email'])))
 				{
 					// Only in page profile & mode reg_details for the current email in use
 					$this->return_content($mode, 'AJAX_CHECK_EMAIL_CURRENT', 'icon_ajax_true.png', 2);
@@ -170,7 +155,7 @@ class controller
 				{
 					break;
 				}
-				$this->validation_password($mode, $password1, false, true);
+				$this->validation_password($mode, $password1, '', true);
 			break;
 		}
 	}
@@ -200,12 +185,80 @@ class controller
 			'strength'	=> ($strength !== '') ? $this->language->lang($strength) : false,
 		), true);
 	}
+	
+	/**
+	 * Clean string in utf8
+	 *
+	 * @param string	$data
+	 * @return string
+	 * @access private
+	 */
+	private function clean_string($data)
+	{
+		if (!function_exists('utf8_clean_string'))
+		{
+			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
+		}
+
+		return utf8_clean_string($data);
+	}
+
+	/**
+	 * Validate username
+	 *
+	 * @param string	$data
+	 * @return bool
+	 * @access private
+	 */
+	private function validation_username($data)
+	{
+		if (!function_exists('validate_username'))
+		{
+			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		}
+
+		return validate_username($data);
+	}
+
+	/**
+	 * Validate email
+	 *
+	 * @param string	$data
+	 * @return bool
+	 * @access private
+	 */
+	private function validation_email($data)
+	{
+		if (!function_exists('validate_user_email'))
+		{
+			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		}
+
+		return validate_user_email($data);
+	}
+
+	/**
+	 * Validate password
+	 *
+	 * @param string	$data
+	 * @return bool
+	 * @access private
+	 */
+	private function validate_password($data)
+	{
+		if (!function_exists('validate_password'))
+		{
+			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		}
+	
+		return validate_password($data);
+	}
 
 	/**
 	 * Verify the length of username
 	 *
-	 * @param string		$mode
-	 * @param string		$username
+	 * @param string	$mode
+	 * @param string	$username
 	 * @return bool
 	 * @access private
 	 */
@@ -238,13 +291,8 @@ class controller
 	 */
 	private function verify_username($mode, $username)
 	{
-		if (!function_exists('validate_username'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-
 		// Check that the username given has not already been used
-		$checkresult = validate_username($username);
+		$checkresult = $this->validation_username($username);
 		// Check if it the username is ok (false means it is)
 		// if the username already exists, not banned or does not respect all the obligations
 		if ($checkresult !== false)
@@ -269,11 +317,6 @@ class controller
 	 */
 	private function verify_password($mode, $password1, $password2 = false)
 	{
-		if (!function_exists('utf8_clean_string'))
-		{
-			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
-		}
-
 		$length1 = strlen($password1);
 		// if password1 is too small
 		if ($length1 < $this->config['min_pass_chars'])
@@ -286,7 +329,7 @@ class controller
 		if ($mode == 'oldpassword')
 		{
 			// The two passwords are identical ?
-			if (utf8_clean_string($password1) === utf8_clean_string($password2))
+			if ($this->clean_string($password1) === $this->clean_string($password2))
 			{
 				// If the second is the same as the current one
 				$check_password = $this->passwords_manager->check($password2, $this->user->data['user_password']);
@@ -334,22 +377,15 @@ class controller
 	 * Check the password doesn't contain any illegal chars etc.
 	 *
 	 * @param string		$mode
-	 * @param string		$password
+	 * @param string		$password1
+	 * @param string		$password2
+	 * @param bool			$power
 	 * @return bool
 	 * @access private
 	 */
-	private function validation_password($mode, $password1, $password2 = false, $strenght = false)
+	private function validation_password($mode, $password1, $password2 = '', $power = false)
 	{
-		if (!function_exists('validate_password'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-		if (!function_exists('utf8_clean_string'))
-		{
-			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
-		}
-
-		$checkresult = validate_password($password1);
+		$checkresult = $this->validate_password($password1);
 		// Check if the password is ok (false means it is)
 		if ($checkresult !== false)
 		{
@@ -357,17 +393,17 @@ class controller
 			$this->return_content($mode, $checkresult . '_NEW_PASSWORD');
 			return true;
 		}
-		else if ($strenght !== false)
+		else if ($power !== false)
 		{
 			// Check the "strength" of the password and show an image accordingly
 			$strength = $this->check_password_strength($password1);
 			$this->return_content($mode, $strength['content'], $strength['image'], $strength['number'] + 2, '', $strength['title']);
 			return true;
 		}
-		else if ($password2 !== false)
+		else if ($password2 !== '')
 		{
 			// Check if first and second passwords are the same
-			if (utf8_clean_string($password1) === utf8_clean_string($password2))
+			if ($this->clean_string($password1) === $this->clean_string($password2))
 			{
 				// Passwords are the same, show a correct message
 				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_TRUE', 'icon_ajax_true.png', 2);
