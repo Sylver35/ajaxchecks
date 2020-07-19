@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Breizh Smilies Categories" description="This extension add categories for the smilies." default="all">
+<project name="Breizh Ajax Checks" description="Allows checking ajax availability of username, email address. Power of the password and respect obligations." default="all">
 	<property name="vendor-name" value="sylver35" />
 	<property name="extension-name" value="ajaxchecks" />
 	<!--
