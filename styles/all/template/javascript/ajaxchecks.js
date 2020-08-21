@@ -47,10 +47,8 @@ var checks = {
 	}
 
 	if($('#new_password').length){
-		$('<div id="passwordContainer"></div>').insertBefore('#new_password');
+		$('<div id="passwordContainer"></div><div id="passwordcur" class="ajaxchecks" style="display:'+checks.inline+';"></div><div id="strength" class="ajaxchecks" style="display:'+checks.block+';"></div>').insertBefore('#new_password');
 		$('#passwordContainer').prepend($('#new_password'));
-		$('<div id="passwordcur" class="ajaxchecks"></div>').insertAfter('#passwordContainer').css('display',checks.inline);
-		$('<div id="strength" class="ajaxchecks"></div>').insertAfter('#passwordcur').css('display',checks.block);
 		$('<input id="passwordTxt" maxlength="255" value="" class="inputbox'+checks.autowidth+'" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" autocorrect="off"></input>').insertAfter('#new_password').hide();
 		$('<div id="assist-visual" class="input-control-visual"><div class="assist-area"><div id="assist-icon" class="eui-svg-assist eui-icon-assist-hide"><button id="assist-btn" type="button" class="transparent-btn" title="'+ajaxLang['DISPLAY']+'"><span id="assist-msg" class="sr-only">'+ajaxLang['DISPLAY']+'</span></button></div></div></div>').insertAfter('#passwordTxt');
 		$('#assist-btn').on({'click': function(){checks.passwordSwitch('new_password','passwordTxt','assist-icon','assist-msg','assist-btn')}});
@@ -76,9 +74,8 @@ var checks = {
 	}
 
 	if($('#password_confirm').length){
-		$('<div id="passwordContainerTwo"></div>').insertBefore('#password_confirm');
+		$('<div id="passwordContainerTwo"></div><div id="passwordcheck" class="ajaxchecks" style="display:'+checks.inline+';"></div>').insertBefore('#password_confirm');
 		$('#passwordContainerTwo').prepend($('#password_confirm'));
-		$('<div id="passwordcheck" class="ajaxchecks"></div>').insertAfter('#passwordContainerTwo').css('display',checks.inline);
 		$('<input id="passwordTxtTwo" maxlength="255" value="" class="inputbox'+checks.autowidth+'" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" autocorrect="off"></input>').insertAfter('#password_confirm').hide();
 		$('<div id="assist-visual-two" class="input-control-visual"><div class="assist-area"><div id="assist-icon-two" class="eui-svg-assist eui-icon-assist-hide"><button id="assist-btn-two" type="button" class="transparent-btn" title="'+ajaxLang['DISPLAY']+'"><span id="assist-msg-two" class="sr-only">'+ajaxLang['DISPLAY']+'</span></button></div></div></div>').insertAfter('#passwordTxtTwo');
 		$('#assist-btn-two').on({'click': function(){checks.passwordSwitch('password_confirm','passwordTxtTwo','assist-icon-two','assist-msg-two','assist-btn-two')}});
@@ -183,7 +180,7 @@ var checks = {
 				}
 			break;
 		}
-		// Verify actual password
+		// Verify actual password if needed
 		if(config.details){
 			checks.actualPassword();
 		}
@@ -252,7 +249,7 @@ var checks = {
 		if(!$('#'+inputText).is(':visible')){
 			// Change the icon
 			$('#'+assistIcon).removeClass('eui-icon-assist-hide').addClass('eui-icon-assist-show');
-			// Detach unused events
+			// Change show inputs
 			$('#'+inputPassword).addClass('off-screen').prop('aria-hidden', true);
 			$('#'+inputText).val($('#'+inputPassword).val()).show().prop('aria-hidden', false);
 			// Populate the value into the hidden password field
@@ -271,8 +268,6 @@ var checks = {
 			// a bit of accessibility
 			$('#'+assistMsg).text(ajaxLang['DISPLAY']);
 			$('#'+assistBtn).attr('title', ajaxLang['DISPLAY']);
-			// Detach unused events
-			$('#'+inputText).off('input focus').off('blur');
 		}
 	};
 })(jQuery);

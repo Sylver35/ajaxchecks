@@ -322,9 +322,8 @@ class controller
 			$this->return_content($mode, 'TOO_SHORT_NEW_PASSWORD');
 			return true;
 		}
-		
 
-		if ($mode == 'oldpassword')
+		if ($mode === 'oldpassword')
 		{
 			// The two passwords are identical ?
 			if ($this->clean_string($password1) === $this->clean_string((string) $password2))
@@ -338,7 +337,7 @@ class controller
 				}
 			}
 		}
-		else if ($mode != 'strength')
+		else if ($mode !== 'strength')
 		{
 			if ($password2 !== false)
 			{
