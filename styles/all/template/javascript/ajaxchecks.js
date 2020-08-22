@@ -119,7 +119,7 @@ var checks = {
 			});
 		}
 	}
-	$('<div id="ajaxfrom"></div>').insertAfter(config.details ? '#passwordcheck' : '#email').html(checks.ajaxCheckingTrue+ajaxLang['FROM']).hide();
+	$('<div id="ajaxfrom"></div>').insertAfter(config.details ? '#passwordcheck' : '#checkemail').html(checks.ajaxCheckingTrue+ajaxLang['FROM']).hide();
 
 	checks.sendData = function(mode,name1,value1,name2,value2){
 		if($('#ajaxfrom').is(':hidden')){
