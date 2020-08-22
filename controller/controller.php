@@ -61,8 +61,8 @@ class controller
 	public function ajax()
 	{
 		$mode = $this->request->variable('mode', '');
-		$username = $this->request->variable('username', '', true);
 		$email = $this->request->variable('email', '', true);
+		$username = $this->request->variable('username', '', true);
 		$password1 = $this->request->variable('password1', '', true);
 		$password2 = $this->request->variable('password2', '', true);
 
@@ -183,7 +183,7 @@ class controller
 			'strength'	=> ($strength !== '') ? $this->language->lang($strength) : false,
 		), true);
 	}
-	
+
 	/**
 	 * Clean string in utf8
 	 *
@@ -248,7 +248,7 @@ class controller
 		{
 			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 		}
-	
+
 		return validate_password($data);
 	}
 
@@ -316,7 +316,7 @@ class controller
 	private function verify_password($mode, $password1, $password2 = false)
 	{
 		$length1 = strlen($password1);
-		// if password1 is too small
+		// if password is too small
 		if ($length1 < $this->config['min_pass_chars'])
 		{
 			$this->return_content($mode, 'TOO_SHORT_NEW_PASSWORD');
@@ -428,31 +428,29 @@ class controller
 	private function check_password($mode, $password)
 	{
 		$check_password = $this->passwords_manager->check($password, $this->user->data['user_password'], $this->user->data);
-		switch ($mode)
+		if ($mode === 'passwordcur')
 		{
-			case 'passwordcur':
-				// Check if it the password is ok (false means it is)
-				if ($check_password !== false)
-				{
-					$this->return_content($mode, 'SAME_PASSWORD_ERROR');
-				}
-				else
-				{
-					$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
-				}
-			break;
-
-			case 'oldpassword':
-				// Check if it the password is ok (true means it is)
-				if ($check_password !== false)
-				{
-					$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
-				}
-				else
-				{
-					$this->return_content($mode, 'CUR_PASSWORD_ERROR');
-				}
-			break;
+			// Check if it the password is ok (false means it is)
+			if ($check_password !== false)
+			{
+				$this->return_content($mode, 'SAME_PASSWORD_ERROR');
+			}
+			else
+			{
+				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
+			}
+		}
+		else
+		{
+			// Check if it the password is ok (true means it is)
+			if ($check_password !== false)
+			{
+				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
+			}
+			else
+			{
+				$this->return_content($mode, 'CUR_PASSWORD_ERROR');
+			}
 		}
 	}
 

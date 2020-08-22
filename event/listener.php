@@ -70,7 +70,7 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.ucp_register_data_before' 	=> 'ajax_register_data',
+			'core.ucp_register_data_before'		=> 'ajax_register_data',
 			'core.ucp_profile_reg_details_data'	=> 'ajax_profile_data',
 		);
 	}

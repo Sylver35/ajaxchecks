@@ -119,11 +119,11 @@ var checks = {
 			});
 		}
 	}
-	$('<div id="ajaxfrom"></div>').insertAfter('#passwordcheck').hide();
+	$('<div id="ajaxfrom"></div>').insertAfter(config.details ? '#passwordcheck' : '#email').html(checks.ajaxCheckingTrue+ajaxLang['FROM']).hide();
 
 	checks.sendData = function(mode,name1,value1,name2,value2){
 		if($('#ajaxfrom').is(':hidden')){
-			$('#ajaxfrom').html(checks.ajaxCheckingTrue+ajaxLang['FROM']).show();
+			$('#ajaxfrom').show();
 		}
 		// Show that the request is running
 		switch(mode){
@@ -156,7 +156,7 @@ var checks = {
 				}
 			break;
 			case 'checkemail':
-				if(value1.length > 6){
+				if(value1.length > 6 && value1.indexOf('@') !== -1){
 					$('#checkemail').html(checks.ajaxCheckingImg+ajaxLang['EMAIL']);
 				}else{
 					return;
