@@ -73,24 +73,8 @@ class controller
 		switch ($mode)
 		{
 			case 'usernamecheck':
-				if ($this->verify_length($mode, $username))
-				{
-					break;
-				}
-				$this->verify_username($mode, $username);
-			break;
-
 			case 'usernamecur':
-				if ($this->verify_length($mode, $username))
-				{
-					break;
-				}
-				// it's actual username?
-				if ($this->verify_actual_username($mode, $username))
-				{
-					break;
-				}
-				$this->verify_username($mode, $username);
+				$this->verify_username_length($mode, $username);
 			break;
 
 			case 'checkemail':
@@ -258,26 +242,26 @@ class controller
 	 *
 	 * @param string	$mode
 	 * @param string	$username
-	 * @return bool
+	 * @return void
 	 * @access private
 	 */
-	private function verify_length($mode, $username)
+	private function verify_username_length($mode, $username)
 	{
 		$length = strlen($username);
 		// if username is too small
 		if ($length < $this->config['min_name_chars'])
 		{
 			$this->return_content($mode, 'TOO_SHORT_USERNAME');
-			return true;
+			return;
 		}
 		// if username is too long
 		if ($length > $this->config['max_name_chars'])
 		{
 			$this->return_content($mode, 'TOO_LONG_USERNAME');
-			return true;
+			return;
 		}
 
-		return false;
+		$this->verify_username($mode, $username);
 	}
 
 	/**
@@ -290,6 +274,14 @@ class controller
 	 */
 	private function verify_username($mode, $username)
 	{
+		// it's actual username?
+		if ($mode == 'usernamecur')
+		{
+			if ($this->verify_actual_username($mode, $username))
+			{
+				return;
+			}
+		}
 		// Check that the username given has not already been used
 		$checkresult = $this->validation_username($username);
 		// Check if it the username is ok (false means it is)
@@ -345,45 +337,83 @@ class controller
 
 		if ($mode === 'oldpassword')
 		{
-			// The two passwords are identical ?
-			if ($this->clean_string($password1) === $this->clean_string((string) $password2))
+			if ($this->verify_old_password($mode, $password1, $password2))
 			{
-				// If the second is the same as the current one
-				$check_password = $this->passwords_manager->check($password2, $this->user->data['user_password']);
-				if ($check_password !== false)
-				{
-					$this->return_content($mode, 'SAME_PASSWORD_ERROR');
-					return true;
-				}
+				return true;
 			}
 		}
 		else if ($mode !== 'strength')
 		{
-			if ($password2 !== false)
+			if ($this->verify_second_password($mode, $password1, $password2, $length1))
 			{
-				$length2 = strlen($password2);
-				// if password2 is too small
-				if ($length2 < $this->config['min_pass_chars'])
-				{
-					$this->return_content($mode, 'TOO_SHORT_PASSWORD_CONFIRM');
-					return true;
-				}
-				// If the passwords have different lengths
-				if ($length2 > $length1)
-				{
-					$this->return_content($mode, 'AJAX_CHECK_PASSWORD_BIG');
-					return true;
-				}
+				return true;
 			}
-			// Only in page reg_details for the current password in use
-			if ($this->user->data['is_registered'])
+		}
+
+		return false;
+	}
+
+	/**
+	 * Verify if passwords are identical
+	 *
+	 * @param string		$mode
+	 * @param string		$password1
+	 * @param string		$password2
+	 * @return bool
+	 * @access private
+	 */
+	private function verify_old_password($mode, $password1, $password2)
+	{
+		// The two passwords are identical ?
+		if ($this->clean_string($password1) === $this->clean_string((string) $password2))
+		{
+			// If the second is the same as the current one
+			$check_password = $this->passwords_manager->check($password2, $this->user->data['user_password']);
+			if ($check_password !== false)
 			{
-				$same_password = $this->passwords_manager->check($password1, $this->user->data['user_password']);
-				if ($same_password)
-				{
-					$this->return_content($mode, 'SAME_PASSWORD_ERROR');
-					return true;
-				}
+				$this->return_content($mode, 'SAME_PASSWORD_ERROR');
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Verify the second password
+	 *
+	 * @param string		$mode
+	 * @param string		$password1
+	 * @param string		$password2
+	 * @return bool
+	 * @access private
+	 */
+	private function verify_second_password($mode, $password1, $password2, $length1)
+	{
+		if ($password2 !== false)
+		{
+			$length2 = strlen($password2);
+			// if password2 is too small
+			if ($length2 < $this->config['min_pass_chars'])
+			{
+				$this->return_content($mode, 'TOO_SHORT_PASSWORD_CONFIRM');
+				return true;
+			}
+			// If the passwords have different lengths
+			if ($length2 > $length1)
+			{
+				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_BIG');
+				return true;
+			}
+		}
+		// Only in page reg_details for the current password in use
+		if ($this->user->data['is_registered'])
+		{
+			$same_password = $this->passwords_manager->check($password1, $this->user->data['user_password']);
+			if ($same_password)
+			{
+				$this->return_content($mode, 'SAME_PASSWORD_ERROR');
+				return true;
 			}
 		}
 
