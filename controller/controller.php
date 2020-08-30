@@ -325,7 +325,7 @@ class controller
 	 * @return bool
 	 * @access private
 	 */
-	private function verify_password($mode, $password1, $password2 = false)
+	private function verify_password($mode, $password1, $password2 = '')
 	{
 		$length1 = strlen($password1);
 		// if password is too small
@@ -390,7 +390,7 @@ class controller
 	 */
 	private function verify_second_password($mode, $password1, $password2, $length1)
 	{
-		if ($password2 !== false)
+		if ($password2 !== '')
 		{
 			$length2 = strlen($password2);
 			// if password2 is too small
