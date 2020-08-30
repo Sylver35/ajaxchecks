@@ -86,38 +86,15 @@ class controller
 					break;
 				}
 				// it's actual username?
-				if ($this->clean_string($username) === $this->clean_string($this->user->data['username']))
+				if ($this->verify_actual_username($mode, $username))
 				{
-					$this->return_content($mode, 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true.png', 2);
 					break;
 				}
 				$this->verify_username($mode, $username);
 			break;
 
 			case 'checkemail':
-				// if email is too small
-				if (strlen($email) < 9)
-				{
-					$this->return_content($mode, 'TOO_SHORT_EMAIL');
-					break;
-				}
-				// Check the email is not in use, has the correct format, is for a "real" domain, etc.
-				$checkresult = $this->validation_email($email);
-				// Check if it the email is ok (false means it is)
-				if ($checkresult !== false)
-				{
-					// Failed the email validation
-					$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $this->language->lang((string) $checkresult . '_EMAIL')));
-				}
-				else if ($this->user->data['is_registered'] && ($this->clean_string($email) === $this->clean_string($this->user->data['user_email'])))
-				{
-					// Only in page profile & mode reg_details for the current email in use
-					$this->return_content($mode, 'AJAX_CHECK_EMAIL_CURRENT', 'icon_ajax_true.png', 2);
-				}
-				else
-				{
-					$this->return_content($mode, 'AJAX_CHECK_EMAIL_TRUE_FIRST', 'icon_ajax_true.png', 2);
-				}
+				$this->validation_email($mode, $email);
 			break;
 
 			case 'passwordcheck':
@@ -221,18 +198,42 @@ class controller
 	/**
 	 * Validate email
 	 *
+	 * @param string	$mode
 	 * @param string	$data
-	 * @return bool
+	 * @return void
 	 * @access private
 	 */
-	private function validation_email($data)
+	private function validation_email($mode, $data)
 	{
+		// if email is too small
+		if (strlen($data) < 9)
+		{
+			$this->return_content($mode, 'TOO_SHORT_EMAIL');
+			return;
+		}
+
 		if (!function_exists('validate_user_email'))
 		{
 			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 		}
 
-		return validate_user_email($data);
+		// Check the email is not in use, has the correct format, is for a "real" domain, etc.
+		$checkresult = validate_user_email($data);
+		// Check if it the email is ok (false means it is)
+		if ($checkresult !== false)
+		{
+			// Failed the email validation
+			$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $this->language->lang((string) $checkresult . '_EMAIL')));
+		}
+		else if ($this->user->data['is_registered'] && ($this->clean_string($data) === $this->clean_string($this->user->data['user_email'])))
+		{
+			// Only in page profile & mode reg_details for the current email in use
+			$this->return_content($mode, 'AJAX_CHECK_EMAIL_CURRENT', 'icon_ajax_true.png', 2);
+		}
+		else
+		{
+			$this->return_content($mode, 'AJAX_CHECK_EMAIL_TRUE_FIRST', 'icon_ajax_true.png', 2);
+		}
 	}
 
 	/**
@@ -302,6 +303,25 @@ class controller
 			// if username doesn't exist and respect all the obligations
 			$this->return_content($mode, 'AJAX_CHECK_USERNAME_TRUE', 'icon_ajax_true.png', 2);
 		}
+	}
+
+	/**
+	 * Verify if username is the actual
+	 *
+	 * @param string		$mode
+	 * @param string		$username
+	 * @return bool
+	 * @access private
+	 */
+	private function verify_actual_username($mode, $username)
+	{
+		if ($this->clean_string($username) === $this->clean_string($this->user->data['username']))
+		{
+			$this->return_content($mode, 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true.png', 2);
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -399,22 +419,35 @@ class controller
 		}
 		else if ($password2 !== '')
 		{
-			// Check if first and second passwords are the same
-			if ($this->clean_string($password1) === $this->clean_string($password2))
-			{
-				// Passwords are the same, show a correct message
-				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_TRUE', 'icon_ajax_true.png', 2);
-				return true;
-			}
-			else
-			{
-				// Passwords not the same, show the error
-				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_FALSE');
-				return true;
-			}
+			$this->check_two_passwords($mode, $password1, $password2);
+			return true;
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Check if the passwords are the same
+	 *
+	 * @param string		$mode
+	 * @param string		$password1
+	 * @param string		$password2
+	 * @return void
+	 * @access private
+	 */
+	private function check_two_passwords($mode, $password1, $password2)
+	{
+		// Check if first and second passwords are the same
+		if ($this->clean_string($password1) === $this->clean_string($password2))
+		{
+			// Passwords are the same, show a correct message
+			$this->return_content($mode, 'AJAX_CHECK_PASSWORD_TRUE', 'icon_ajax_true.png', 2);
+		}
+		else
+		{
+			// Passwords not the same, show the error
+			$this->return_content($mode, 'AJAX_CHECK_PASSWORD_FALSE');
+		}
 	}
 
 	/**
