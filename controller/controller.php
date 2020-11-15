@@ -8,7 +8,6 @@
  */
 
 namespace sylver35\ajaxchecks\controller;
-
 use phpbb\config\config;
 use phpbb\request\request;
 use phpbb\user;
