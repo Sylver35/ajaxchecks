@@ -8,12 +8,12 @@
  */
 
 namespace sylver35\ajaxchecks\controller;
+
 use phpbb\config\config;
 use phpbb\request\request;
 use phpbb\user;
 use phpbb\language\language;
 use phpbb\passwords\manager;
-use phpbb\json_response;
 
 class controller
 {
@@ -134,15 +134,14 @@ class controller
 	private function return_content($mode, $value, $image = '', $type = 0, $reason = '', $strength = '')
 	{
 		$response = new \phpbb\json_response;
-
-		$response->send(array(
+		$response->send([
 			'mode'		=> $mode,
 			'content'	=> $this->language->lang($value),
 			'image'		=> ($image !== '') ? $image : 'icon_ajax_false.png',
 			'type'		=> ($type !== 0) ? $type : 1,
-			'reason'	=> ($reason !== '') ? $reason : '',
-			'strength'	=> ($strength !== '') ? $this->language->lang($strength) : false,
-		), true);
+			'strength'	=> ($strength !== '') ? $this->language->lang($strength) : '',
+			'reason'	=> $reason,
+		], true);
 	}
 
 	/**
@@ -207,7 +206,8 @@ class controller
 		if ($checkresult !== false)
 		{
 			// Failed the email validation
-			$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $this->language->lang((string) $checkresult . '_EMAIL')));
+			$result = $this->language->is_set((string) $checkresult . '_EMAIL') ? $this->language->lang((string) $checkresult . '_EMAIL') : (string) $checkresult;
+			$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $result));
 		}
 		else if ($this->user->data['is_registered'] && ($this->clean_string($data) === $this->clean_string($this->user->data['user_email'])))
 		{
@@ -335,16 +335,16 @@ class controller
 			return true;
 		}
 
-		if ($mode === 'oldpassword')
+		if ($mode == 'oldpassword')
 		{
 			if ($this->verify_old_password($mode, $password1, $password2))
 			{
 				return true;
 			}
 		}
-		else if ($mode !== 'strength')
+		else if ($mode != 'strength')
 		{
-			if ($this->verify_second_password($mode, $password1, $password2, $length1))
+			if ($this->verify_second_password($mode, $password1, $password2))
 			{
 				return true;
 			}
@@ -388,10 +388,11 @@ class controller
 	 * @return bool
 	 * @access private
 	 */
-	private function verify_second_password($mode, $password1, $password2, $length1)
+	private function verify_second_password($mode, $password1, $password2)
 	{
 		if ($password2 !== '')
 		{
+			$length1 = strlen($password1);
 			$length2 = strlen($password2);
 			// if password2 is too small
 			if ($length2 < $this->config['min_pass_chars'])
@@ -491,7 +492,7 @@ class controller
 	private function check_password($mode, $password)
 	{
 		$check_password = $this->passwords_manager->check($password, $this->user->data['user_password'], $this->user->data);
-		if ($mode === 'passwordcur')
+		if ($mode == 'passwordcur')
 		{
 			// Check if it the password is ok (false means it is)
 			if ($check_password !== false)
@@ -527,7 +528,7 @@ class controller
 	private function check_password_strength($password)
 	{
 		$number = 0;
-		$patterns = array('#[a-z]#', '#[A-Z]#', '#[0-9]#', '/[¬!"£$%^&*()`{}\[\]:@~;\'#<>?,.\/\\-=_+\|]/');
+		$patterns = ['#[a-z]#', '#[A-Z]#', '#[0-9]#', '/[¬!"£$%^&*()`{}\[\]:@~;\'#<>?,.\/\\-=_+\|]/'];
 		foreach ($patterns as $pattern)
 		{
 			if (preg_match($pattern, $password, $matches))
@@ -552,11 +553,11 @@ class controller
 			$number++;
 		}
 
-		return array(
+		return [
 			'number'	=> $number,
 			'image'		=> 'icon_ajax_strength_' . $number . '.png',
 			'title'		=> 'IMG_ICON_AJAX_STRENGTH_' . $number,
 			'content'	=> 'AJAX_CHECK_PASSWORD_STRENGTH_' . $number,
-		);
+		];
 	}
 }

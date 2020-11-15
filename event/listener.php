@@ -69,10 +69,10 @@ class listener implements EventSubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.ucp_register_data_before'		=> 'ajax_register_data',
 			'core.ucp_profile_reg_details_data'	=> 'ajax_profile_data',
-		);
+		];
 	}
 
 	/**
@@ -82,7 +82,7 @@ class listener implements EventSubscriberInterface
 	{
 		// Load language data
 		$this->language->add_lang('ajaxchecks', 'sylver35/ajaxchecks');
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_IN_AJAX_CHECKS'			=> true,
 			'S_IN_AJAX_CHECKS_REGISTER'	=> true,
 			'S_IN_AJAX_CHECKS_DETAILS'	=> false,
@@ -91,7 +91,7 @@ class listener implements EventSubscriberInterface
 			'AJAX_CHECKS_FILE'			=> $this->helper->route('sylver35_ajaxchecks_controller'),
 			'AJAX_CHECKS_PATH'			=> $this->ext_path_web . 'images/',
 			'L_AJAX_CHECK_FROM'			=> $this->language->lang('AJAX_CHECK_FROM', $this->get_version()),
-		));
+		]);
 	}
 
 	/**
@@ -101,7 +101,7 @@ class listener implements EventSubscriberInterface
 	{
 		// Load language data
 		$this->language->add_lang('ajaxchecks', 'sylver35/ajaxchecks');
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_IN_AJAX_CHECKS'			=> true,
 			'S_IN_AJAX_CHECKS_REGISTER'	=> false,
 			'S_IN_AJAX_CHECKS_DETAILS'	=> true,
@@ -110,7 +110,7 @@ class listener implements EventSubscriberInterface
 			'AJAX_CHECKS_FILE'			=> $this->helper->route('sylver35_ajaxchecks_controller'),
 			'AJAX_CHECKS_PATH'			=> $this->ext_path_web . 'images/',
 			'L_AJAX_CHECK_FROM'			=> $this->language->lang('AJAX_CHECK_FROM', $this->get_version()),
-		));
+		]);
 	}
 
 	/**
