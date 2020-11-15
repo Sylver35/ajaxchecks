@@ -14,7 +14,7 @@ use phpbb\request\request;
 use phpbb\user;
 use phpbb\language\language;
 use phpbb\passwords\manager;
-use phpbb\json_response
+use phpbb\json_response;
 
 class controller
 {
