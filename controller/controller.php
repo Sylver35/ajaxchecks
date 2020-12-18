@@ -8,17 +8,6 @@
 
 namespace sylver35\ajaxchecks\controller;
 
-/** @var \phpbb\config\config */
-use phpbb\config\config;
-/** @var \phpbb\request\request */
-use phpbb\request\request;
-/** @var \phpbb\user */
-use phpbb\user;
-/** @var \phpbb\language\language */
-use phpbb\language\language;
-/** @var \phpbb\passwords\manager */
-use phpbb\passwords\manager;
-
 class controller
 {
 	/** @var \phpbb\config\config */
@@ -45,7 +34,15 @@ class controller
 	/**
 	 * Controller constructor
 	 */
-	public function __construct(config $config, request $request, user $user, language $language, manager $passwords_manager, string $root_path, string $php_ext)
+	public function __construct(
+		\phpbb\config\config $config,
+		\phpbb\request\request $request,
+		\phpbb\user $user,
+		\phpbb\language\language $language,
+		\phpbb\passwords\manager $passwords_manager,
+		$root_path,
+		$php_ext
+	)
 	{
 		$this->config = $config;
 		$this->request = $request;
