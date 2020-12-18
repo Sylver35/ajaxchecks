@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension
@@ -8,12 +7,17 @@
  */
 
 namespace sylver35\ajaxchecks\controller;
+
+/** @var \phpbb\config\config */
 use phpbb\config\config;
+/** @var \phpbb\request\request */
 use phpbb\request\request;
+/** @var \phpbb\user */
 use phpbb\user;
+/** @var \phpbb\language\language */
 use phpbb\language\language;
+/** @var \phpbb\passwords\manager */
 use phpbb\passwords\manager;
-use phpbb\json_response;
 
 class controller
 {
