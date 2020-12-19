@@ -67,48 +67,14 @@ class ajaxchecks
 	}
 
 	/**
-	 * Clean string in utf8
-	 *
-	 * @param string	$data
-	 * @return string
-	 * @access private
-	 */
-	private function clean_string($data)
-	{
-		if (!function_exists('utf8_clean_string'))
-		{
-			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
-		}
-
-		return utf8_clean_string($data);
-	}
-
-	/**
-	 * Validate username
-	 *
-	 * @param string	$data
-	 * @return bool
-	 * @access private
-	 */
-	private function validation_username($data)
-	{
-		if (!function_exists('validate_username'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-
-		return validate_username($data);
-	}
-
-	/**
 	 * Validate email
 	 *
 	 * @param string	$mode
 	 * @param string	$data
 	 * @return void
-	 * @access private
+	 * @access public
 	 */
-	private function validation_email($mode, $data)
+	public function validation_email($mode, $data)
 	{
 		// if email is too small
 		if (strlen($data) < 9)
@@ -143,31 +109,14 @@ class ajaxchecks
 	}
 
 	/**
-	 * Validate password
-	 *
-	 * @param string	$data
-	 * @return bool
-	 * @access private
-	 */
-	private function validate_password($data)
-	{
-		if (!function_exists('validate_password'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-
-		return validate_password($data);
-	}
-
-	/**
 	 * Verify the length of username
 	 *
 	 * @param string	$mode
 	 * @param string	$username
 	 * @return void
-	 * @access private
+	 * @access public
 	 */
-	private function verify_username_length($mode, $username)
+	public function verify_username_length($mode, $username)
 	{
 		$length = strlen($username);
 		// if username is too small
@@ -184,6 +133,131 @@ class ajaxchecks
 		}
 
 		$this->verify_username($mode, $username);
+	}
+
+	/**
+	 * Verify length of passwords
+	 *
+	 * @param string		$mode
+	 * @param string		$password1
+	 * @param string		$password2
+	 * @return bool
+	 * @access public
+	 */
+	public function verify_password($mode, $password1, $password2 = '')
+	{
+		$length1 = strlen($password1);
+		// if password is too small
+		if ($length1 < $this->config['min_pass_chars'])
+		{
+			$this->return_content($mode, 'TOO_SHORT_NEW_PASSWORD');
+			return true;
+		}
+
+		if ($mode == 'oldpassword')
+		{
+			if ($this->verify_old_password($mode, $password1, $password2))
+			{
+				return true;
+			}
+		}
+		else if ($mode != 'strength')
+		{
+			if ($this->verify_second_password($mode, $password1, $password2))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if the password is ok
+	 *
+	 * @param string		$mode
+	 * @param string		$password
+	 * @return void
+	 * @access public
+	 */
+	public function check_password($mode, $password)
+	{
+		$check_password = $this->passwords_manager->check($password, $this->user->data['user_password'], $this->user->data);
+		if ($mode == 'passwordcur')
+		{
+			// Check if it the password is ok (false means it is)
+			if ($check_password !== false)
+			{
+				$this->return_content($mode, 'SAME_PASSWORD_ERROR');
+			}
+			else
+			{
+				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
+			}
+		}
+		else
+		{
+			// Check if it the password is ok (true means it is)
+			if ($check_password !== false)
+			{
+				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
+			}
+			else
+			{
+				$this->return_content($mode, 'CUR_PASSWORD_ERROR');
+			}
+		}
+	}
+
+	/**
+	 * Clean string in utf8
+	 *
+	 * @param string	$data
+	 * @return string
+	 * @access private
+	 */
+	private function clean_string($data)
+	{
+		if (!function_exists('utf8_clean_string'))
+		{
+			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
+		}
+
+		return utf8_clean_string($data);
+	}
+
+	/**
+	 * Validate username
+	 *
+	 * @param string	$data
+	 * @return bool
+	 * @access private
+	 */
+	private function validation_username($data)
+	{
+		if (!function_exists('validate_username'))
+		{
+			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		}
+
+		return validate_username($data);
+	}
+
+	/**
+	 * Validate password
+	 *
+	 * @param string	$data
+	 * @return bool
+	 * @access private
+	 */
+	private function validate_password($data)
+	{
+		if (!function_exists('validate_password'))
+		{
+			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		}
+
+		return validate_password($data);
 	}
 
 	/**
@@ -233,43 +307,6 @@ class ajaxchecks
 		{
 			$this->return_content($mode, 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true.png', 2);
 			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Verify length of passwords
-	 *
-	 * @param string		$mode
-	 * @param string		$password1
-	 * @param string		$password2
-	 * @return bool
-	 * @access private
-	 */
-	private function verify_password($mode, $password1, $password2 = '')
-	{
-		$length1 = strlen($password1);
-		// if password is too small
-		if ($length1 < $this->config['min_pass_chars'])
-		{
-			$this->return_content($mode, 'TOO_SHORT_NEW_PASSWORD');
-			return true;
-		}
-
-		if ($mode == 'oldpassword')
-		{
-			if ($this->verify_old_password($mode, $password1, $password2))
-			{
-				return true;
-			}
-		}
-		else if ($mode != 'strength')
-		{
-			if ($this->verify_second_password($mode, $password1, $password2))
-			{
-				return true;
-			}
 		}
 
 		return false;
@@ -351,9 +388,9 @@ class ajaxchecks
 	 * @param string		$password2
 	 * @param bool			$power
 	 * @return bool
-	 * @access private
+	 * @access public
 	 */
-	private function validation_password($mode, $password1, $password2 = '', $power = false)
+	public function validation_password($mode, $password1, $password2 = '', $power = false)
 	{
 		$checkresult = $this->validate_password($password1);
 		// Check if the password is ok (false means it is)
@@ -400,43 +437,6 @@ class ajaxchecks
 		{
 			// Passwords not the same, show the error
 			$this->return_content($mode, 'AJAX_CHECK_PASSWORD_FALSE');
-		}
-	}
-
-	/**
-	 * Check if the password is ok
-	 *
-	 * @param string		$mode
-	 * @param string		$password
-	 * @return void
-	 * @access private
-	 */
-	private function check_password($mode, $password)
-	{
-		$check_password = $this->passwords_manager->check($password, $this->user->data['user_password'], $this->user->data);
-		if ($mode == 'passwordcur')
-		{
-			// Check if it the password is ok (false means it is)
-			if ($check_password !== false)
-			{
-				$this->return_content($mode, 'SAME_PASSWORD_ERROR');
-			}
-			else
-			{
-				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
-			}
-		}
-		else
-		{
-			// Check if it the password is ok (true means it is)
-			if ($check_password !== false)
-			{
-				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
-			}
-			else
-			{
-				$this->return_content($mode, 'CUR_PASSWORD_ERROR');
-			}
 		}
 	}
 

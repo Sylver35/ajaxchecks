@@ -14,7 +14,7 @@ services:
     sylver35.ajaxchecks.controller:
         class: sylver35\ajaxchecks\controller\controller
         arguments:
-            - '@sylver35.ajaxchecks.core.ajaxchecks'
+            - '@sylver35.ajaxchecks.core'
             - '@request'
             - '@language'
             - '%core.root_path%'

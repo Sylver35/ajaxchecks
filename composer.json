@@ -3,26 +3,25 @@
     "type": "phpbb-extension",
     "description": "Breizh Ajax Checks Extension for phpBB. Allows checking ajax availability of username, email address. Power of the password and respect obligations. In the registration (mode=register) page and the account modification page (reg_details).",
     "homepage": "https://breizhcode.com",
-    "version": "1.7.0",
-    "time": "2020-04-06",
+    "version": "1.8.0",
+    "time": "2020-12-19",
     "keywords": ["phpbb", "extension", "password", "email", "register", "profile", "ajax", "checks", "breizh"],
     "license": "GPL-2.0-only",
     "authors": [{
             "name": "Sylver35",
-            "email": "webmaster@breizhcode.com",
             "homepage": "https://breizhcode.com",
-            "role": "Developer"
+            "email": "webmaster@breizhcode.com",
+            "role": "Extension Developer"
         }],
     "require": {
         "php": ">=7.1.3",
         "ext-json": "*",
-        "composer/installers": "~1.0.0",
-        "phpbb/phpbb": ">=3.3.0"
+        "phpbb/phpbb": ">=3.3.2"
     },
     "extra": {
         "display-name": "Breizh Ajax Checks",
         "soft-require": {
-            "phpbb/phpbb": ">=3.3.0"
+            "phpbb/phpbb": ">=3.3.2"
         },
         "version-check": {
             "host": "versions.breizhcode.com",
