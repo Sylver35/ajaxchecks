@@ -230,7 +230,7 @@ class ajaxchecks
 	 * Validate username
 	 *
 	 * @param string	$data
-	 * @return bool
+	 * @return bool|string
 	 * @access private
 	 */
 	private function validation_username($data)
@@ -247,7 +247,7 @@ class ajaxchecks
 	 * Validate password
 	 *
 	 * @param string	$data
-	 * @return bool
+	 * @return bool|string
 	 * @access private
 	 */
 	private function validate_password($data)
