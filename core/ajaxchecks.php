@@ -2,11 +2,16 @@
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension
- * @copyright	(c) 2018-2020 Sylver35  https://breizhcode.com
+ * @copyright	(c) 2018-2021 Sylver35  https://breizhcode.com
  * @license		http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  */
 
 namespace sylver35\ajaxchecks\core;
+
+use phpbb\language\language;
+use phpbb\user;
+use phpbb\config\config;
+use phpbb\passwords\manager as passwords_manager;
 
 class ajaxchecks
 {
@@ -31,7 +36,7 @@ class ajaxchecks
 	/**
 	 * Constructor
 	 */
-	public function __construct(\phpbb\language\language $language, \phpbb\user $user, \phpbb\config\config $config, \phpbb\passwords\manager $passwords_manager, $root_path, $php_ext)
+	public function __construct(language $language, user $user, config $config, passwords_manager $passwords_manager, $root_path, $php_ext)
 	{
 		$this->language = $language;
 		$this->user = $user;
@@ -94,7 +99,8 @@ class ajaxchecks
 		if ($checkresult !== false)
 		{
 			// Failed the email validation
-			$result = $this->language->is_set((string) $checkresult . '_EMAIL') ? $this->language->lang((string) $checkresult . '_EMAIL') : (string) $checkresult;
+			$checkresult = (string) $checkresult;
+			$result = $this->language->is_set($checkresult . '_EMAIL') ? $this->language->lang($checkresult . '_EMAIL') : $checkresult;
 			$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $result));
 		}
 		else if ($this->user->data['is_registered'] && ($this->clean_string($data) === $this->clean_string($this->user->data['user_email'])))
@@ -154,14 +160,14 @@ class ajaxchecks
 			return true;
 		}
 
-		if ($mode == 'oldpassword')
+		if ($mode === 'oldpassword')
 		{
 			if ($this->verify_old_password($mode, $password1, $password2))
 			{
 				return true;
 			}
 		}
-		else if ($mode != 'strength')
+		else if ($mode !== 'strength')
 		{
 			if ($this->verify_second_password($mode, $password1, $password2))
 			{
@@ -183,7 +189,7 @@ class ajaxchecks
 	public function check_password($mode, $password)
 	{
 		$check_password = $this->passwords_manager->check($password, $this->user->data['user_password'], $this->user->data);
-		if ($mode == 'passwordcur')
+		if ($mode === 'passwordcur')
 		{
 			// Check if it the password is ok (false means it is)
 			if ($check_password !== false)
@@ -210,6 +216,42 @@ class ajaxchecks
 	}
 
 	/**
+	 * Check the password doesn't contain any illegal chars etc.
+	 *
+	 * @param string		$mode
+	 * @param string		$password1
+	 * @param string		$password2
+	 * @param bool			$power
+	 * @return bool
+	 * @access public
+	 */
+	public function validation_password($mode, $password1, $password2 = '', $power = false)
+	{
+		$checkresult = $this->validate_password($password1);
+		// Check if the password is ok (false means it is)
+		if ($checkresult !== false)
+		{
+			// Failed the password validation
+			$this->return_content($mode, (string) $checkresult . '_NEW_PASSWORD');
+			return true;
+		}
+		else if ($power !== false)
+		{
+			// Check the "strength" of the password and show an image accordingly
+			$strength = $this->check_password_strength($password1);
+			$this->return_content($mode, $strength['content'], $strength['image'], $strength['number'] + 2, '', $strength['title']);
+			return true;
+		}
+		else if ($password2 !== '')
+		{
+			$this->check_two_passwords($mode, $password1, $password2);
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Clean string in utf8
 	 *
 	 * @param string	$data
@@ -223,7 +265,7 @@ class ajaxchecks
 			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
 		}
 
-		return utf8_clean_string($data);
+		return (string) utf8_clean_string($data);
 	}
 
 	/**
@@ -271,7 +313,7 @@ class ajaxchecks
 	private function verify_username($mode, $username)
 	{
 		// it's actual username?
-		if ($mode == 'usernamecur')
+		if ($mode === 'usernamecur')
 		{
 			if ($this->verify_actual_username($mode, $username))
 			{
@@ -324,7 +366,7 @@ class ajaxchecks
 	private function verify_old_password($mode, $password1, $password2)
 	{
 		// The two passwords are identical ?
-		if ($this->clean_string($password1) === $this->clean_string((string) $password2))
+		if ($this->clean_string($password1) === $this->clean_string($password2))
 		{
 			// If the second is the same as the current one
 			$check_password = $this->passwords_manager->check($password2, $this->user->data['user_password']);
@@ -375,42 +417,6 @@ class ajaxchecks
 				$this->return_content($mode, 'SAME_PASSWORD_ERROR');
 				return true;
 			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Check the password doesn't contain any illegal chars etc.
-	 *
-	 * @param string		$mode
-	 * @param string		$password1
-	 * @param string		$password2
-	 * @param bool			$power
-	 * @return bool
-	 * @access public
-	 */
-	public function validation_password($mode, $password1, $password2 = '', $power = false)
-	{
-		$checkresult = $this->validate_password($password1);
-		// Check if the password is ok (false means it is)
-		if ($checkresult !== false)
-		{
-			// Failed the password validation
-			$this->return_content($mode, (string) $checkresult . '_NEW_PASSWORD');
-			return true;
-		}
-		else if ($power !== false)
-		{
-			// Check the "strength" of the password and show an image accordingly
-			$strength = $this->check_password_strength($password1);
-			$this->return_content($mode, $strength['content'], $strength['image'], $strength['number'] + 2, '', $strength['title']);
-			return true;
-		}
-		else if ($password2 !== '')
-		{
-			$this->check_two_passwords($mode, $password1, $password2);
-			return true;
 		}
 
 		return false;

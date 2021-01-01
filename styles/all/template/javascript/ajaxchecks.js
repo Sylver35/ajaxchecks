@@ -1,7 +1,7 @@
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension
- * @copyright	(c) 2018-2020 Sylver35  https://breizhcode.com
+ * @copyright	(c) 2018-2021 Sylver35  https://breizhcode.com
  * @license		http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
 
@@ -202,7 +202,7 @@ var checks = {
 			async: true,
 			cache: false,
 			success: function(result){
-				var title = (result.strength !== false) ? result.strength : result.content;
+				var title = (result.strength !== '') ? result.strength : result.content;
 				$('#'+result.mode).html('<img src="'+config.path+result.image+'" alt="'+title+'" title="'+title+'" /> <span>'+result.content+result.reason+'</span>');
 				$('#'+result.mode+' > span').css('color',checks.colorMessage(result.type));
 				$('#'+result.mode+' > span > span').css('color','initial');

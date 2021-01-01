@@ -2,11 +2,15 @@
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension
- * @copyright	(c) 2018-2020 Sylver35  https://breizhcode.com
+ * @copyright	(c) 2018-2021 Sylver35  https://breizhcode.com
  * @license		http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  */
 
 namespace sylver35\ajaxchecks\controller;
+
+use sylver35\ajaxchecks\core\ajaxchecks;
+use phpbb\request\request;
+use phpbb\language\language;
 
 class controller
 {
@@ -28,7 +32,7 @@ class controller
 	/**
 	 * Controller constructor
 	 */
-	public function __construct(\sylver35\ajaxchecks\core\ajaxchecks $ajaxchecks, \phpbb\request\request $request, \phpbb\language\language $language, $root_path, $php_ext)
+	public function __construct(ajaxchecks $ajaxchecks, request $request, language $language, $root_path, $php_ext)
 	{
 		$this->ajaxchecks = $ajaxchecks;
 		$this->request = $request;
@@ -45,11 +49,11 @@ class controller
 	 */
 	public function ajax()
 	{
-		$mode = $this->request->variable('mode', '');
-		$email = $this->request->variable('email', '', true);
-		$username = $this->request->variable('username', '', true);
-		$password1 = $this->request->variable('password1', '', true);
-		$password2 = $this->request->variable('password2', '', true);
+		$mode = (string) $this->request->variable('mode', '');
+		$email = (string) $this->request->variable('email', '', true);
+		$username = (string) $this->request->variable('username', '', true);
+		$password1 = (string) $this->request->variable('password1', '', true);
+		$password2 = (string) $this->request->variable('password2', '', true);
 
 		// Load needed language data
 		$this->language->add_lang('ajaxchecks', 'sylver35/ajaxchecks');
