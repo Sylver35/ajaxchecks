@@ -42,8 +42,6 @@ class controller
 	public function ajax()
 	{
 		$mode = (string) $this->request->variable('mode', '');
-		$password1 = (string) $this->request->variable('password1', '', true);
-		$password2 = (string) $this->request->variable('password2', '', true);
 
 		// Load needed language data
 		$this->language->add_lang('ajaxchecks', 'sylver35/ajaxchecks');
@@ -64,6 +62,9 @@ class controller
 			case 'passwordcur':
 			case 'oldpassword':
 			case 'strength';
+				$password1 = (string) $this->request->variable('password1', '', true);
+				$password2 = (string) $this->request->variable('password2', '', true);
+
 				if ($this->ajaxchecks->verify_password($mode, $password1, $password2))
 				{
 					break;
