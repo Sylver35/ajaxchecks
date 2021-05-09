@@ -41,46 +41,40 @@ class controller
 	 */
 	public function ajax()
 	{
-		$mode = (string) $this->request->variable('mode', '');
-
 		// Load needed language data
 		$this->language->add_lang('ajaxchecks', 'sylver35/ajaxchecks');
 		$this->language->add_lang('ucp');
+		// mode for switch
+		$mode = (string) $this->request->variable('mode', '');
 
-		switch ($mode)
+		if ($mode === 'checkemail')
 		{
-			case 'usernamecheck':
-			case 'usernamecur':
-				$this->ajaxchecks->verify_username_length($mode, (string) $this->request->variable('username', '', true));
-			break;
+			$this->ajaxchecks->validation_email($mode, (string) $this->request->variable('email', '', true));
+		}
+		else if (strpos($mode, 'username') !== false)
+		{
+			$this->ajaxchecks->verify_username_length($mode, (string) $this->request->variable('username', '', true));
+		}
+		else
+		{
+			$password1 = (string) $this->request->variable('password1', '', true);
+			$password2 = (string) $this->request->variable('password2', '', true);
 
-			case 'checkemail':
-				$this->ajaxchecks->validation_email($mode, (string) $this->request->variable('email', '', true));
-			break;
+			if ($this->ajaxchecks->verify_password($mode, $password1, $password2))
+			{
+				return;
+			}
 
-			case 'passwordcheck':
-			case 'passwordcur':
-			case 'oldpassword':
-			case 'strength';
-				$password1 = (string) $this->request->variable('password1', '', true);
-				$password2 = (string) $this->request->variable('password2', '', true);
-
-				if ($this->ajaxchecks->verify_password($mode, $password1, $password2))
+			if ($mode !== 'oldpassword')
+			{
+				$validation = $this->ajaxchecks->validation_password($mode, $password1, $password2, $mode === 'strength');
+				if ($mode !== 'passwordcur' || ($mode === 'passwordcur') && $validation)
 				{
-					break;
+					return;
 				}
+			}
 
-				if ($mode !== 'oldpassword')
-				{
-					$validation = $this->ajaxchecks->validation_password($mode, $password1, $password2, $mode === 'strength');
-					if ($mode !== 'passwordcur' || ($mode === 'passwordcur') && $validation)
-					{
-						break;
-					}
-				}
-
-				$this->ajaxchecks->check_password($mode, $password1);
-			break;
+			$this->ajaxchecks->check_password($mode, $password1);
 		}
 	}
 }
