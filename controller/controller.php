@@ -70,23 +70,16 @@ class controller
 					break;
 				}
 
-				if ($mode === 'passwordcheck' || $mode === 'passwordcur')
+				if ($mode !== 'oldpassword')
 				{
-					$validation = $this->ajaxchecks->validation_password($mode, $password1, $password2);
-					if (($mode === 'passwordcur') && $validation)
+					$validation = $this->ajaxchecks->validation_password($mode, $password1, $password2, $mode === 'strength');
+					if ($mode !== 'passwordcur' || ($mode === 'passwordcur') && $validation)
 					{
 						break;
 					}
 				}
-				else if ($mode === 'strength')
-				{
-					$this->ajaxchecks->validation_password($mode, $password1, '', true);
-				}
 
-				if ($mode === 'passwordcur' || $mode === 'oldpassword')
-				{
-					$this->ajaxchecks->check_password($mode, $password1);
-				}
+				$this->ajaxchecks->check_password($mode, $password1);
 			break;
 		}
 	}
