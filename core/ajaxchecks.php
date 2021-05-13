@@ -64,7 +64,7 @@ class ajaxchecks
 		$response->send([
 			'mode'		=> $mode,
 			'content'	=> $this->language->lang($value),
-			'image'		=> ($image !== '') ? $image : 'icon_ajax_false.png',
+			'image'		=> (($image !== '') ? $image : 'icon_ajax_false') . '.png',
 			'type'		=> ($type !== 0) ? $type : 1,
 			'strength'	=> ($strength !== '') ? $this->language->lang($strength) : '',
 			'reason'	=> $reason,
@@ -103,11 +103,11 @@ class ajaxchecks
 		else if ($this->user->data['is_registered'] && ($this->clean_string($data) === $this->clean_string($this->user->data['user_email'])))
 		{
 			// Only in page profile & mode reg_details for the current email in use
-			$this->return_content($mode, 'AJAX_CHECK_EMAIL_CURRENT', 'icon_ajax_true.png', 2);
+			$this->return_content($mode, 'AJAX_CHECK_EMAIL_CURRENT', 'icon_ajax_true', 2);
 		}
 		else
 		{
-			$this->return_content($mode, 'AJAX_CHECK_EMAIL_TRUE_FIRST', 'icon_ajax_true.png', 2);
+			$this->return_content($mode, 'AJAX_CHECK_EMAIL_TRUE_FIRST', 'icon_ajax_true', 2);
 		}
 	}
 
@@ -195,7 +195,7 @@ class ajaxchecks
 			}
 			else
 			{
-				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
+				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true', 2);
 			}
 		}
 		else
@@ -203,7 +203,7 @@ class ajaxchecks
 			// Check if it the password is ok (true means it is)
 			if ($check_password !== false)
 			{
-				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true.png', 2);
+				$this->return_content($mode, 'AJAX_CHECK_PASSWORD_OK', 'icon_ajax_true', 2);
 			}
 			else
 			{
@@ -229,7 +229,7 @@ class ajaxchecks
 		if ($checkresult !== false)
 		{
 			// Failed the password validation
-			$this->return_content($mode, $checkresult . '_NEW_PASSWORD');
+			$this->return_content($mode, (string) $checkresult . '_NEW_PASSWORD');
 			return true;
 		}
 		else if ($power !== false)
@@ -257,7 +257,10 @@ class ajaxchecks
 	 */
 	private function clean_string($data)
 	{
-		include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
+		if (!function_exists('utf8_strrpos'))
+		{
+			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
+		}
 
 		return (string) utf8_clean_string($data);
 	}
@@ -319,7 +322,7 @@ class ajaxchecks
 		else
 		{
 			// if username doesn't exist and respect all the obligations
-			$this->return_content($mode, 'AJAX_CHECK_USERNAME_TRUE', 'icon_ajax_true.png', 2);
+			$this->return_content($mode, 'AJAX_CHECK_USERNAME_TRUE', 'icon_ajax_true', 2);
 		}
 	}
 
@@ -335,7 +338,7 @@ class ajaxchecks
 	{
 		if ($this->clean_string($username) === $this->clean_string($this->user->data['username']))
 		{
-			$this->return_content($mode, 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true.png', 2);
+			$this->return_content($mode, 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true', 2);
 			return true;
 		}
 
@@ -425,7 +428,7 @@ class ajaxchecks
 		if ($this->clean_string($password1) === $this->clean_string($password2))
 		{
 			// Passwords are the same, show a correct message
-			$this->return_content($mode, 'AJAX_CHECK_PASSWORD_TRUE', 'icon_ajax_true.png', 2);
+			$this->return_content($mode, 'AJAX_CHECK_PASSWORD_TRUE', 'icon_ajax_true', 2);
 		}
 		else
 		{
@@ -471,7 +474,7 @@ class ajaxchecks
 
 		return [
 			'number'	=> $number,
-			'image'		=> 'icon_ajax_strength_' . $number . '.png',
+			'image'		=> 'icon_ajax_strength_' . $number,
 			'title'		=> 'IMG_ICON_AJAX_STRENGTH_' . $number,
 			'content'	=> 'AJAX_CHECK_PASSWORD_STRENGTH_' . $number,
 		];
