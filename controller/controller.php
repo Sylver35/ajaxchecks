@@ -44,8 +44,7 @@ class controller
 		// Load needed language data
 		$this->language->add_lang('ajaxchecks', 'sylver35/ajaxchecks');
 		$this->language->add_lang('ucp');
-		// mode for switch
-		$mode = (string) $this->request->variable('mode', '');
+		$mode = $this->request->variable('mode', '');
 
 		if ($mode === 'checkemail')
 		{

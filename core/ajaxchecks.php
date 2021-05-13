@@ -88,10 +88,7 @@ class ajaxchecks
 			return;
 		}
 
-		if (!function_exists('validate_user_email'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
+		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 
 		// Check the email is not in use, has the correct format, is for a "real" domain, etc.
 		$checkresult = validate_user_email($data);
@@ -232,7 +229,7 @@ class ajaxchecks
 		if ($checkresult !== false)
 		{
 			// Failed the password validation
-			$this->return_content($mode, (string) $checkresult . '_NEW_PASSWORD');
+			$this->return_content($mode, $checkresult . '_NEW_PASSWORD');
 			return true;
 		}
 		else if ($power !== false)
@@ -260,10 +257,7 @@ class ajaxchecks
 	 */
 	private function clean_string($data)
 	{
-		if (!function_exists('utf8_clean_string'))
-		{
-			include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
-		}
+		include($this->root_path . 'includes/utf/utf_tools.' . $this->php_ext);
 
 		return (string) utf8_clean_string($data);
 	}
@@ -277,10 +271,7 @@ class ajaxchecks
 	 */
 	private function validation_username($data)
 	{
-		if (!function_exists('validate_username'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
+		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 
 		return validate_username($data);
 	}
@@ -294,10 +285,7 @@ class ajaxchecks
 	 */
 	private function validate_password($data)
 	{
-		if (!function_exists('validate_password'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
+		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 
 		return validate_password($data);
 	}
