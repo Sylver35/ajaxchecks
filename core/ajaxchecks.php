@@ -56,9 +56,9 @@ class ajaxchecks
 	 * @param string		$reason
 	 * @param string		$strength
 	 * @return void
-	 * @access private
+	 * @access public
 	 */
-	private function return_content($mode, $value, $image = '', $type = 0, $reason = '', $strength = '')
+	public function return_content($mode, $value, $image = '', $type = 0, $reason = '', $strength = '')
 	{
 		$response = new \phpbb\json_response;
 		$response->send([
@@ -69,73 +69,6 @@ class ajaxchecks
 			'strength'	=> ($strength !== '') ? $this->language->lang($strength) : '',
 			'reason'	=> $reason,
 		], true);
-	}
-
-	/**
-	 * Validate email
-	 *
-	 * @param string	$mode
-	 * @param string	$data
-	 * @return void
-	 * @access public
-	 */
-	public function validation_email($mode, $data)
-	{
-		// if email is too small
-		if (strlen($data) < 9)
-		{
-			$this->return_content($mode, 'TOO_SHORT_EMAIL');
-			return;
-		}
-
-		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-
-		// Check the email is not in use, has the correct format, is for a "real" domain, etc.
-		$checkresult = validate_user_email($data);
-		// Check if it the email is ok (false means it is)
-		if ($checkresult !== false)
-		{
-			// Failed the email validation
-			$checkresult = (string) $checkresult;
-			$result = $this->language->is_set($checkresult . '_EMAIL') ? $this->language->lang($checkresult . '_EMAIL') : $checkresult;
-			$this->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $result));
-		}
-		else if ($this->user->data['is_registered'] && ($this->clean_string($data) === $this->clean_string($this->user->data['user_email'])))
-		{
-			// Only in page profile & mode reg_details for the current email in use
-			$this->return_content($mode, 'AJAX_CHECK_EMAIL_CURRENT', 'icon_ajax_true', 2);
-		}
-		else
-		{
-			$this->return_content($mode, 'AJAX_CHECK_EMAIL_TRUE_FIRST', 'icon_ajax_true', 2);
-		}
-	}
-
-	/**
-	 * Verify the length of username
-	 *
-	 * @param string	$mode
-	 * @param string	$username
-	 * @return void
-	 * @access public
-	 */
-	public function verify_username_length($mode, $username)
-	{
-		$length = strlen($username);
-		// if username is too small
-		if ($length < $this->config['min_name_chars'])
-		{
-			$this->return_content($mode, 'TOO_SHORT_USERNAME');
-			return;
-		}
-		// if username is too long
-		if ($length > $this->config['max_name_chars'])
-		{
-			$this->return_content($mode, 'TOO_LONG_USERNAME');
-			return;
-		}
-
-		$this->verify_username($mode, $username);
 	}
 
 	/**
@@ -253,9 +186,9 @@ class ajaxchecks
 	 *
 	 * @param string	$data
 	 * @return string
-	 * @access private
+	 * @access public
 	 */
-	private function clean_string($data)
+	public function clean_string($data)
 	{
 		if (!function_exists('utf8_strrpos'))
 		{
@@ -263,20 +196,6 @@ class ajaxchecks
 		}
 
 		return (string) utf8_clean_string($data);
-	}
-
-	/**
-	 * Validate username
-	 *
-	 * @param string	$data
-	 * @return bool|string
-	 * @access private
-	 */
-	private function validation_username($data)
-	{
-		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-
-		return validate_username($data);
 	}
 
 	/**
@@ -291,58 +210,6 @@ class ajaxchecks
 		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 
 		return validate_password($data);
-	}
-
-	/**
-	 * Verify if username respect all the obligations
-	 *
-	 * @param string		$mode
-	 * @param string		$username
-	 * @return void
-	 * @access private
-	 */
-	private function verify_username($mode, $username)
-	{
-		// it's actual username?
-		if ($mode === 'usernamecur')
-		{
-			if ($this->verify_actual_username($mode, $username))
-			{
-				return;
-			}
-		}
-		// Check that the username given has not already been used
-		$checkresult = $this->validation_username($username);
-		// Check if it the username is ok (false means it is)
-		// if the username already exists, not banned or does not respect all the obligations
-		if ($checkresult !== false)
-		{
-			$this->return_content($mode, (string) $checkresult . '_USERNAME');
-		}
-		else
-		{
-			// if username doesn't exist and respect all the obligations
-			$this->return_content($mode, 'AJAX_CHECK_USERNAME_TRUE', 'icon_ajax_true', 2);
-		}
-	}
-
-	/**
-	 * Verify if username is the actual
-	 *
-	 * @param string		$mode
-	 * @param string		$username
-	 * @return bool
-	 * @access private
-	 */
-	private function verify_actual_username($mode, $username)
-	{
-		if ($this->clean_string($username) === $this->clean_string($this->user->data['username']))
-		{
-			$this->return_content($mode, 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true', 2);
-			return true;
-		}
-
-		return false;
 	}
 
 	/**

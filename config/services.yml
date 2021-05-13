@@ -17,6 +17,10 @@ services:
             - '@sylver35.ajaxchecks.core'
             - '@request'
             - '@language'
+            - '@user'
+            - '@config'
+            - '%core.root_path%'
+            - '%core.php_ext%'
     sylver35.ajaxchecks.core:
         class: sylver35\ajaxchecks\core\ajaxchecks
         arguments:
