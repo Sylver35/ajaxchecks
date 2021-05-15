@@ -70,7 +70,7 @@ class controller
 		}
 		else if (strpos($mode, 'username') !== false)
 		{
-			$this->verify_username_length($mode, (string) $this->request->variable('username', '', true));
+			$this->verify_username_first($mode, (string) $this->request->variable('username', '', true));
 		}
 		else
 		{
@@ -99,14 +99,14 @@ class controller
 	 * Validate email
 	 *
 	 * @param string	$mode
-	 * @param string	$data
+	 * @param string	$email
 	 * @return void
 	 * @access private
 	 */
-	private function validation_email($mode, $data)
+	private function validation_email($mode, $email)
 	{
 		// if email is too small
-		if (strlen($data) < 9)
+		if (strlen($email) < 9)
 		{
 			$this->ajaxchecks->return_content($mode, 'TOO_SHORT_EMAIL');
 			return;
@@ -115,16 +115,17 @@ class controller
 		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
 
 		// Check the email is not in use, has the correct format, is for a "real" domain, etc.
-		$checkresult = validate_user_email($data);
+		$checkresult = validate_user_email($email);
 		// Check if it the email is ok (false means it is)
 		if ($checkresult !== false)
 		{
 			// Failed the email validation
+			// Return the real reason
 			$checkresult = (string) $checkresult;
 			$result = $this->language->is_set($checkresult . '_EMAIL') ? $this->language->lang($checkresult . '_EMAIL') : $checkresult;
 			$this->ajaxchecks->return_content($mode, 'AJAX_CHECK_EMAIL_FAIL', '', 0, $this->language->lang('COMMA_SEPARATOR') . $this->language->lang('AJAX_CHECK_INVALID_EMAIL', $result));
 		}
-		else if ($this->user->data['is_registered'] && ($this->ajaxchecks->clean_string($data) === $this->ajaxchecks->clean_string($this->user->data['user_email'])))
+		else if ($this->user->data['is_registered'] && ($this->ajaxchecks->clean_string($email) === $this->ajaxchecks->clean_string($this->user->data['user_email'])))
 		{
 			// Only in page profile & mode reg_details for the current email in use
 			$this->ajaxchecks->return_content($mode, 'AJAX_CHECK_EMAIL_CURRENT', 'icon_ajax_true', 2);
@@ -143,17 +144,16 @@ class controller
 	 * @return void
 	 * @access private
 	 */
-	private function verify_username_length($mode, $username)
+	private function verify_username_first($mode, $username)
 	{
-		$length = strlen($username);
 		// if username is too small
-		if ($length < $this->config['min_name_chars'])
+		if (strlen($username) < $this->config['min_name_chars'])
 		{
 			$this->ajaxchecks->return_content($mode, 'TOO_SHORT_USERNAME');
 			return;
 		}
 		// if username is too long
-		if ($length > $this->config['max_name_chars'])
+		if (strlen($username) > $this->config['max_name_chars'])
 		{
 			$this->ajaxchecks->return_content($mode, 'TOO_LONG_USERNAME');
 			return;
@@ -175,7 +175,7 @@ class controller
 		// it's actual username?
 		if ($mode === 'usernamecur')
 		{
-			if ($this->verify_actual_username($mode, $username))
+			if ($this->verify_actual_username($username))
 			{
 				return;
 			}
@@ -183,9 +183,9 @@ class controller
 		// Check that the username given has not already been used
 		$checkresult = $this->validation_username($username);
 		// Check if it the username is ok (false means it is)
-		// if the username already exists, not banned or does not respect all the obligations
 		if ($checkresult !== false)
 		{
+			// if the username already exists, not allowed or does not respect all the obligations
 			$this->ajaxchecks->return_content($mode, (string) $checkresult . '_USERNAME');
 		}
 		else
@@ -203,11 +203,11 @@ class controller
 	 * @return bool
 	 * @access private
 	 */
-	private function verify_actual_username($mode, $username)
+	private function verify_actual_username($username)
 	{
 		if ($this->ajaxchecks->clean_string($username) === $this->ajaxchecks->clean_string($this->user->data['username']))
 		{
-			$this->ajaxchecks->return_content($mode, 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true', 2);
+			$this->ajaxchecks->return_content('usernamecur', 'AJAX_CHECK_USERNAME_CUR', 'icon_ajax_true', 2);
 			return true;
 		}
 
