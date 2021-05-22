@@ -173,14 +173,11 @@ class controller
 	private function verify_username($mode, $username)
 	{
 		// it's actual username?
-		if ($mode === 'usernamecur')
+		if ($mode === 'usernamecur' && $this->verify_actual_username($username))
 		{
-			if ($this->verify_actual_username($username))
-			{
-				return;
-			}
+			return;
 		}
-		// Check that the username given has not already been used
+		// Check to see if the username has been taken, or if it is disallowed
 		$checkresult = $this->validation_username($username);
 		// Check if it the username is ok (false means it is)
 		if ($checkresult !== false)
