@@ -1,8 +1,8 @@
 # phpBB Breizh Ajax Checks Extension
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/badges/quality-score.png?b=1.8.1)](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/?branch=1.8.1)
-[![Build Status](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/badges/build.png?b=1.8.1)](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/build-status/1.8.1)
-[![Code Intelligence Status](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/badges/code-intelligence.svg?b=1.8.1)](https://scrutinizer-ci.com/code-intelligence)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/badges/quality-score.png?b=1.8.2)](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/?branch=1.8.2)
+[![Build Status](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/badges/build.png?b=1.8.2)](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/build-status/1.8.2)
+[![Code Intelligence Status](https://scrutinizer-ci.com/g/Sylver35/ajaxchecks/badges/code-intelligence.svg?b=1.8.2)](https://scrutinizer-ci.com/code-intelligence)
 
 ## Install
 
