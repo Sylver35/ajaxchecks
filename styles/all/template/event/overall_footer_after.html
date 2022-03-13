@@ -5,8 +5,8 @@ var config = {
 	password : {% if S_CHANGE_PASSWORD_ON %}true{% else %}false{% endif %},
 	details : {% if S_IN_AJAX_CHECKS_DETAILS %}true{% else %}false{% endif %},
 	register : {% if S_IN_AJAX_CHECKS_REGISTER %}true{% else %}false{% endif %},
-	file : '{{ AJAX_CHECKS_FILE }}',
-	path : '{{ AJAX_CHECKS_PATH }}'
+	path : '{{ AJAX_CHECKS_PATH }}',
+	file : '{{ AJAX_CHECKS_FILE }}'
 };
 var ajaxLang = {
 	'CHECKING' : '{{ lang("AJAX_CHECKING") | escape("js") }}',

@@ -85,7 +85,7 @@ class controller
 			if ($mode !== 'oldpassword')
 			{
 				$validation = $this->ajaxchecks->validation_password($mode, $password1, $password2, $mode === 'strength');
-				if ($mode !== 'passwordcur' || ($mode === 'passwordcur') && $validation)
+				if (($mode !== 'passwordcur') || ($mode === 'passwordcur') && $validation)
 				{
 					return;
 				}
