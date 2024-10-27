@@ -213,7 +213,7 @@ class work
 		{
 			return true;
 		}
-		$password_check = str_replace(['@','$', '£', '&'], ['a', 's', 'l', 'é'], $password_check);
+		$password_check = str_replace(['@', '$', '£', '&'], ['a', 's', 'l', 'é'], $password_check);
 		if (in_array($password_check, $list))
 		{
 			return true;
