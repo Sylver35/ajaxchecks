@@ -1,7 +1,7 @@
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension
- * @copyright	(c) 2019-2022 Sylver35  https://breizhcode.com
+ * @copyright	(c) 2019-2024 Sylver35  https://breizhcode.com
  * @license		http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 */
 
@@ -12,8 +12,8 @@ var checks = {
 	block : 'block',
 	inline : (config.register) ? 'inline' : 'block',
 	autowidth : (config.register) ? ' autowidth" size="25' : '',
-	ajaxCheckingImg : '<img src="'+config.path+'checking.gif" alt="'+ajaxLang['CHECKING']+'" title="'+ajaxLang['CHECKING']+'" /> ',
-	ajaxCheckingTrue : '<img src="'+config.path+'icon_ajax_true.png" alt="'+ajaxLang['CHECKING']+'" title="'+ajaxLang['CHECKING']+'" /> ',
+	ajaxCheckingImg : '<img src="'+config.path+'checking.gif" alt="'+ajaxLang['CHECKING']+'" title="'+ajaxLang['CHECKING']+'"> ',
+	ajaxCheckingTrue : '<img src="'+config.path+'icon_ajax_true.png" alt="'+ajaxLang['CHECKING']+'" title="'+ajaxLang['CHECKING']+'"> ',
 };
 
 (function($) {  // Avoid conflicts with other libraries
@@ -22,15 +22,15 @@ var checks = {
 	// Insert elements object and attributes into DOM
 	if(config.register){
 		$('#username').on({
-			'keyup': function(){checks.sendData('usernamecheck','username',this.value,false,'')},
-			'blur': function(){checks.sendData('usernamecheck','username',this.value,false,'')},
+			'keyup': function(){checks.sendData('usernamecheck','username',this.value,false,'','')},
+			'blur': function(){checks.sendData('usernamecheck','username',this.value,false,'','')},
 		});
 		$('<div id="usernamecheck" class="ajaxchecks"></div>').insertAfter('#username').css('display',checks.inline);
 	}else if(config.details){
 		if($('#username').length){
 			$('#username').on({
-				'keyup': function(){checks.sendData('usernamecur','username',this.value,false,'')},
-				'blur': function(){checks.sendData('usernamecur','username',this.value,false,'')},
+				'keyup': function(){checks.sendData('usernamecur','username',this.value,false,'','')},
+				'blur': function(){checks.sendData('usernamecur','username',this.value,false,'','')},
 			});
 			$('<div id="usernamecur" class="ajaxchecks"></div>').insertAfter('#username').css('display',checks.inline);
 		}
@@ -39,8 +39,8 @@ var checks = {
 	if(config.email){
 		if($('#email').length){
 			$('#email').on({
-				'keyup': function(){checks.sendData('checkemail','email',this.value,false,'')},
-				'blur': function(){checks.sendData('checkemail','email',this.value,false,'')},
+				'keyup': function(){checks.sendData('checkemail','email',this.value,false,'','')},
+				'blur': function(){checks.sendData('checkemail','email',this.value,false,'','')},
 			});
 			$('<div id="checkemail" class="ajaxchecks"></div>').insertAfter('#email').css('display',checks.inline);
 		}
@@ -54,21 +54,21 @@ var checks = {
 		$('#assist-btn').on({'click': function(){checks.passwordSwitch('new_password','passwordTxt','assist-icon','assist-msg','assist-btn')}});
 		if(config.details){
 			$('#new_password').on({
-				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'');checks.sendData('strength','password1',this.value,false,'')},
-				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'');checks.sendData('strength','password1',this.value,false,'');checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val())},
+				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
+				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','');checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val(),'')},
 			});
 			$('#passwordTxt').on({
-				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'');checks.sendData('strength','password1',this.value,false,'')},
-				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'');checks.sendData('strength','password1',this.value,false,'');checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val())},
+				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
+				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','');checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val(),'')},
 			});
 		}else if(config.register){
 			$('#new_password').on({
-				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'');checks.sendData('strength','password1',this.value,false,'')},
-				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'');checks.sendData('strength','password1',this.value,false,'')},
+				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
+				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
 			});
 			$('#passwordTxt').on({
-				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'');checks.sendData('strength','password1',this.value,false,'')},
-				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'');checks.sendData('strength','password1',this.value,false,'')},
+				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
+				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
 			});
 		}
 	}
@@ -81,21 +81,21 @@ var checks = {
 		$('#assist-btn-two').on({'click': function(){checks.passwordSwitch('password_confirm','passwordTxtTwo','assist-icon-two','assist-msg-two','assist-btn-two')}});
 		if(config.details){
 			$('#password_confirm').on({
-				'keyup': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value)},
-				'blur': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value);checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val())},
+				'keyup': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value,$('#username').val())},
+				'blur': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value,$('#username').val());checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val(),'')},
 			});
 			$('#passwordTxtTwo').on({
-				'keyup': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value)},
-				'blur': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value);checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val())},
+				'keyup': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value,$('#username').val())},
+				'blur': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value,$('#username').val());checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val(),'')},
 			});
 		}else if(config.register){
 			$('#password_confirm').on({
-				'keyup': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value)},
-				'blur': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value)},
+				'keyup': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value,$('#username').val())},
+				'blur': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value,$('#username').val())},
 			});
 			$('#passwordTxtTwo').on({
-				'keyup': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value)},
-				'blur': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value)},
+				'keyup': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value,$('#username').val())},
+				'blur': function(){checks.sendData('passwordcheck','password1',$('#new_password').val(),'password2',this.value,$('#username').val())},
 			});
 		}
 	}
@@ -103,6 +103,7 @@ var checks = {
 	if(config.details && config.password){
 		if($('#cur_password').length){
 			$('<div id="nopassword"></div>').insertBefore('#cur_password').css({'color':'red', 'margin':'5px'}).hide();
+			$('<div id="namepassword"></div>').insertBefore('#cur_password').css({'color':'red', 'margin':'5px'});
 			$('<div id="passwordContainerTer"></div>').insertBefore('#cur_password');
 			$('#passwordContainerTer').prepend($('#cur_password'));
 			$('<div id="oldpassword" class="ajaxchecks"></div>').insertAfter('#cur_password').css('display',checks.block);
@@ -110,76 +111,27 @@ var checks = {
 			$('<div id="assist-visual-ter" class="input-control-visual"><div class="assist-area"><div id="assist-icon-ter" class="eui-svg-assist eui-icon-assist-hide"><button id="assist-btn-ter" type="button" class="transparent-btn" title="'+ajaxLang['DISPLAY']+'"><span id="assist-msg-ter" class="sr-only">'+ajaxLang['DISPLAY']+'</span></button></div></div></div>').insertAfter('#passwordTxtTer');
 			$('#assist-btn-ter').on({'click': function(){checks.passwordSwitch('cur_password','passwordTxtTer','assist-icon-ter','assist-msg-ter','assist-btn-ter')}});
 			$('#cur_password').on({
-				'keyup': function(){checks.sendData('oldpassword','password1',this.value,'password2',$('#new_password').val())},
-				'blur': function(){checks.sendData('oldpassword','password1',this.value,'password2',$('#new_password').val())},
+				'keyup': function(){checks.sendData('oldpassword','password1',this.value,'password2',$('#new_password').val(),$('#username').val())},
+				'blur': function(){checks.sendData('oldpassword','password1',this.value,'password2',$('#new_password').val(),$('#username').val())},
 			});
 			$('#passwordTxtTer').on({
-				'keyup': function(){checks.sendData('oldpassword','password1',this.value,'password2',$('#new_password').val())},
-				'blur': function(){checks.sendData('oldpassword','password1',this.value,'password2',$('#new_password').val())},
+				'keyup': function(){checks.sendData('oldpassword','password1',this.value,'password2',$('#new_password').val(),$('#username').val())},
+				'blur': function(){checks.sendData('oldpassword','password1',this.value,'password2',$('#new_password').val(),$('#username').val())},
 			});
 		}
 	}
 	$('<div id="ajaxfrom"></div>').insertAfter(config.details ? '#passwordcheck' : '#checkemail').html(checks.ajaxCheckingTrue+ajaxLang['FROM']).hide();
 
-	checks.sendData = function(mode,name1,value1,name2,value2){
+	checks.sendData = function(mode,name1,value1,name2,value2,value3){
 		if($('#ajaxfrom').is(':hidden')){
 			$('#ajaxfrom').show();
 		}
+
 		// Show that the request is running
-		switch(mode){
-			case 'usernamecheck':
-				if(value1.length > 2){
-					$('#usernamecheck').html(checks.ajaxCheckingImg+ajaxLang['USERNAME']);
-				}else{
-					return;
-				}
-			break;
-			case 'passwordcur':
-				if(value1.length > 3){
-					$('#passwordcur').html(checks.ajaxCheckingImg+ajaxLang['PASSWORD_CUR']);
-				}else{
-					return;
-				}
-			break;
-			case 'strength':
-				if(value1.length > 3){
-					$('#strength').html(checks.ajaxCheckingImg+ajaxLang['PASSWORD_CUR']);
-				}else{
-					return;
-				}
-			break;
-			case 'passwordcheck':
-				if(value1 !== '' && value2 !== '' && value2.length > 3){
-					$('#passwordcheck').html(checks.ajaxCheckingImg+ajaxLang['PASSWORD']);
-				}else{
-					return;
-				}
-			break;
-			case 'checkemail':
-				if(value1.length > 6 && value1.indexOf('@') !== -1){
-					$('#checkemail').html(checks.ajaxCheckingImg+ajaxLang['EMAIL']);
-				}else{
-					return;
-				}
-			break;
-			case 'usernamecur':
-				if(value1 !== '' && value1.length > 2){
-					$('#usernamecur').html(checks.ajaxCheckingImg+ajaxLang['USERNAME']);
-				}else{
-					return;
-				}
-			break;
-			case 'oldpassword':
-				if(value1.length > 3){
-					$('#oldpassword').html(checks.ajaxCheckingImg+ajaxLang['PASSWORD_CUR']);
-				}else if(value1 === ''){
-					checks.actualPassword();
-					return;
-				}else{
-					return;
-				}
-			break;
+		if(checks.showRunning(mode,name1,value1,name2,value2) == false){
+			return;
 		}
+		
 		// Verify actual password if needed
 		if(config.details){
 			checks.actualPassword();
@@ -188,6 +140,9 @@ var checks = {
 		var postData = 'mode='+mode+'&'+name1+'='+encodeURIComponent(value1);
 		if(name2 !== false){
 			postData += '&'+name2+'='+encodeURIComponent(value2);
+		}
+		if(value3 != ''){
+			postData += '&username='+encodeURIComponent(value3);
 		}
 		// For register page, change language if needed
 		if(config.register && $('#lang').length){
@@ -203,9 +158,10 @@ var checks = {
 			cache: false,
 			success: function(result){
 				var title = (result.strength !== '') ? result.strength : result.content;
-				$('#'+result.mode).html('<img src="'+config.path+result.image+'" alt="'+title+'" title="'+title+'" /> <span>'+result.content+result.reason+'</span>');
+				$('#'+result.mode).html('<img src="'+config.path+result.image+'" alt="'+title+'" title="'+title+'"> <span>'+result.content+result.reason+'</span>');
 				$('#'+result.mode+' > span').css('color',checks.colorMessage(result.type));
 				$('#'+result.mode+' > span > span').css('color','initial');
+				if(result.passname.length){$('#namepassword').html(result.passname)}else{$('#namepassword').html('')}
 			},
 			error: function(){
 				$('#'+mode).html('');
@@ -244,6 +200,65 @@ var checks = {
 		}
 		return color;
 	};
+	
+	checks.showRunning = function(mode,name1,value1,name2,value2){
+		var result = true;
+		switch(mode){
+			case 'usernamecheck':
+				if(value1.length > 2){
+					$('#usernamecheck').html(checks.ajaxCheckingImg+ajaxLang['USERNAME']);
+				}else{
+					result = false;
+				}
+			break;
+			case 'passwordcur':
+				if(value1.length > 4){
+					$('#passwordcur').html(checks.ajaxCheckingImg+ajaxLang['PASSWORD_CUR']);
+				}else{
+					result = false;
+				}
+			break;
+			case 'strength':
+				if(value1.length > 4){
+					$('#strength').html(checks.ajaxCheckingImg+ajaxLang['PASSWORD_CUR']);
+				}else{
+					result = false;
+				}
+			break;
+			case 'passwordcheck':
+				if(value1 !== '' && value2 !== '' && value2.length > 4){
+					$('#passwordcheck').html(checks.ajaxCheckingImg+ajaxLang['PASSWORD']);
+				}else{
+					result = false;
+				}
+			break;
+			case 'checkemail':
+				if(value1.length > 6 && value1.indexOf('@') !== -1){
+					$('#checkemail').html(checks.ajaxCheckingImg+ajaxLang['EMAIL']);
+				}else{
+					result = false;
+				}
+			break;
+			case 'usernamecur':
+				if(value1 !== '' && value1.length > 3){
+					$('#usernamecur').html(checks.ajaxCheckingImg+ajaxLang['USERNAME']);
+				}else{
+					result = false;
+				}
+			break;
+			case 'oldpassword':
+				if(value1.length > 4){
+					$('#oldpassword').html(checks.ajaxCheckingImg+ajaxLang['PASSWORD_CUR']);
+				}else if(value1 === ''){
+					checks.actualPassword();
+					result = false;
+				}else{
+					result = false;
+				}
+			break;
+		}
+		return result;
+	}
 
 	checks.passwordSwitch = function(inputPassword,inputText,assistIcon,assistMsg,assistBtn){
 		if(!$('#'+inputText).is(':visible')){

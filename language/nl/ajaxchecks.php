@@ -4,8 +4,8 @@
 * Breizh ajax checks extension [Dutch]
 *
 * @package language
-* @copyright (c) 2019-2022 Breizh Code  https://breizhcode.com
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019-2024 Breizh Code  https://breizhcode.com
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 * @translator Sylver35  https://breizhcode.com
 * 
 */
@@ -61,7 +61,8 @@ $lang = array_merge($lang, array(
 	'AJAX_CHECK_PASSWORD_BIG'			=> 'De tweede wachtwoord langer is dan de eerste',
 	'AJAX_CHECK_PASSWORD_TOO'			=> 'Het wachtwoord is niet beschikbaar.',
 	'AJAX_CHECK_PASSWORD_OK'			=> 'Het opgegeven wachtwoord is oke.',
-	'AJAX_CHECK_PASSWORD_FAIL'			=> 'Dit wachtwoord is bekend en komt te vaak voor ',
+	'AJAX_CHECK_PASSWORD_FAIL'			=> 'Dit wachtwoord is bekend en komt te vaak voor',
+	'AJAX_CHECK_PASSWORD_NAME'			=> 'Dit wachtwoord is hetzelfde als de gebruikersnaam, wat een grote fout is',
 	'AJAX_CHECK_EMAIL_TRUE_FIRST'		=> 'Het opgegeven e-mailadres is geldig.',
 	'AJAX_CHECK_EMAIL_FORMAT_FALSE'		=> 'Het opgegeven e-mailadres formaat is niet geldig',
 	'AJAX_CHECK_EMAIL_FAIL'				=> 'Ongeldig e-mailadres',

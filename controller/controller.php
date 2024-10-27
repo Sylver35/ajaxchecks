@@ -2,7 +2,7 @@
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension
- * @copyright	(c) 2019-2022 Sylver35  https://breizhcode.com
+ * @copyright	(c) 2019-2024 Sylver35  https://breizhcode.com
  * @license		http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  */
 
@@ -76,6 +76,7 @@ class controller
 		{
 			$password1 = (string) $this->request->variable('password1', '', true);
 			$password2 = (string) $this->request->variable('password2', '', true);
+			$username = (string) $this->request->variable('username', '', true);
 
 			if ($this->ajaxchecks->verify_password($mode, $password1, $password2))
 			{
@@ -84,14 +85,14 @@ class controller
 
 			if ($mode !== 'oldpassword')
 			{
-				$validation = $this->ajaxchecks->validation_password($mode, $password1, $password2, $mode === 'strength');
+				$validation = $this->ajaxchecks->validation_password($mode, $password1, $password2, $username, $mode === 'strength');
 				if (($mode !== 'passwordcur') || ($mode === 'passwordcur') && $validation)
 				{
 					return;
 				}
 			}
 
-			$this->ajaxchecks->check_password($mode, $password1);
+			$this->ajaxchecks->check_password($mode, $password1, $username);
 		}
 	}
 

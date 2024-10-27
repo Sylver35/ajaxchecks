@@ -4,8 +4,8 @@
 * Breizh ajax checks extension [Spanish]
 *
 * @package language
-* @copyright (c) 2019-2022 Breizh Code  https://breizhcode.com
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2019-2024 Breizh Code  https://breizhcode.com
+* @license https://opensource.org/licenses/gpl-license.php GNU Public License
 * @translator Sylver35  https://breizhcode.com
 * 
 */
@@ -62,6 +62,7 @@ $lang = array_merge($lang, array(
 	'AJAX_CHECK_PASSWORD_TOO'			=> 'Su contraseña no está disponible.',
 	'AJAX_CHECK_PASSWORD_OK'			=> 'La contraseña proporcionada es correcta.',
 	'AJAX_CHECK_PASSWORD_FAIL'			=> 'Esta contraseña es conocida y demasiado común',
+	'AJAX_CHECK_PASSWORD_NAME'			=> 'Esta contraseña es la misma que el nombre de usuario, lo cual es un defecto importante',
 	'AJAX_CHECK_EMAIL_TRUE_FIRST'		=> 'Su dirección de correo electrónico es válida.',
 	'AJAX_CHECK_EMAIL_FORMAT_FALSE'		=> 'El formato de su dirección de correo electrónico es incorrecto',
 	'AJAX_CHECK_EMAIL_FAIL'				=> 'Dirección de correo electrónico inválida',
