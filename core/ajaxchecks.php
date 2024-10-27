@@ -81,7 +81,7 @@ class ajaxchecks
 	 * @return bool
 	 * @access public
 	 */
-	public function verify_password($mode, $password1, $password2 = '', $username = '')
+	public function verify_password($mode, $password1, $password2 = '')
 	{
 		$length1 = strlen($password1);
 		// if password is too small
@@ -346,7 +346,7 @@ class ajaxchecks
 	 */
 	private function check_password_strength($password)
 	{
-		$number = $first = 0;
+		$number = 0;
 		$length = strlen($password);
 		$number = $this->check_normal_character($password, $number);
 		$number = $this->check_uppercase_character($password, $number);
