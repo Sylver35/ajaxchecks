@@ -15,6 +15,7 @@ services:
         class: sylver35\ajaxchecks\controller\controller
         arguments:
             - '@sylver35.ajaxchecks.core'
+            - '@sylver35.ajaxchecks.work'
             - '@request'
             - '@language'
             - '@user'
@@ -24,10 +25,17 @@ services:
     sylver35.ajaxchecks.core:
         class: sylver35\ajaxchecks\core\ajaxchecks
         arguments:
+            - '@sylver35.ajaxchecks.work'
             - '@language'
             - '@user'
             - '@config'
             - '@passwords.manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+    sylver35.ajaxchecks.work:
+        class: sylver35\ajaxchecks\core\work
+        arguments:
+            - '@language'
             - '%core.root_path%'
             - '%core.php_ext%'
 
