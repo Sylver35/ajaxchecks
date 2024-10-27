@@ -102,7 +102,6 @@ class ajaxchecks
 		$check_pass = $this->passwords_manager->check($password, $this->user->data['user_password'], $this->user->data);
 		if ($this->work->check_frequency_password($password) !== false)
 		{
-			if ($mode === 'passwordcur')
 			$this->work->return_content($mode, 'AJAX_CHECK_PASSWORD_FAIL');
 			return;
 		}
