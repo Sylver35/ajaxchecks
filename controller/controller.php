@@ -2,7 +2,7 @@
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension
- * @copyright	(c) 2019-2024 Sylver35  https://breizhcode.com
+ * @copyright	(c) 2019-2025 Sylver35  https://breizhcode.com
  * @license		http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  */
 
@@ -118,7 +118,7 @@ class controller
 			return;
 		}
 
-		include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+		include_once($this->root_path . 'includes/functions_user.' . $this->php_ext);
 
 		// Check the email is not in use, has the correct format, is for a "real" domain, etc.
 		$checkresult = validate_user_email($email);

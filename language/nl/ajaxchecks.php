@@ -4,7 +4,7 @@
 * Breizh ajax checks extension [Dutch]
 *
 * @package language
-* @copyright (c) 2019-2024 Breizh Code  https://breizhcode.com
+* @copyright (c) 2019-2025 Breizh Code  https://breizhcode.com
 * @license https://opensource.org/licenses/gpl-license.php GNU Public License
 * @translator Sylver35  https://breizhcode.com
 * 

@@ -54,21 +54,21 @@ var checks = {
 		$('#assist-btn').on({'click': function(){checks.passwordSwitch('new_password','passwordTxt','assist-icon','assist-msg','assist-btn')}});
 		if(config.details){
 			$('#new_password').on({
-				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
-				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','');checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val(),'')},
+				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'',$('#username').val())},
+				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'',$('#username').val());checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val(),'')},
 			});
 			$('#passwordTxt').on({
-				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
-				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','');checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val(),'')},
+				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'',$('#username').val())},
+				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'',$('#username').val());checks.sendData('oldpassword','password1',$('#cur_password').val(),'password2',$('#new_password').val(),'')},
 			});
 		}else if(config.register){
 			$('#new_password').on({
-				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
-				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
+				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'',$('#username').val())},
+				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'',$('#username').val())},
 			});
 			$('#passwordTxt').on({
-				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
-				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'','')},
+				'keyup': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'',$('#username').val())},
+				'blur': function(){checks.sendData('passwordcur','password1',this.value,false,'',$('#username').val());checks.sendData('strength','password1',this.value,false,'',$('#username').val())},
 			});
 		}
 	}
@@ -205,7 +205,7 @@ var checks = {
 		var result = true;
 		switch(mode){
 			case 'usernamecheck':
-				if(value1.length > 2){
+				if(value1.length > 3){
 					$('#usernamecheck').html(checks.ajaxCheckingImg+ajaxLang['USERNAME']);
 				}else{
 					result = false;
@@ -233,7 +233,7 @@ var checks = {
 				}
 			break;
 			case 'checkemail':
-				if(value1.length > 6 && value1.indexOf('@') !== -1){
+				if(value1.length > 7 && value1.indexOf('@') !== -1 && value1.indexOf('.') !== -1){
 					$('#checkemail').html(checks.ajaxCheckingImg+ajaxLang['EMAIL']);
 				}else{
 					result = false;
@@ -256,10 +256,13 @@ var checks = {
 					result = false;
 				}
 			break;
+			default:
+				result = true;
 		}
 		return result;
 	}
 
+	// Switch password inputs to text inputs and vice versa
 	checks.passwordSwitch = function(inputPassword,inputText,assistIcon,assistMsg,assistBtn){
 		if(!$('#'+inputText).is(':visible')){
 			// Change the icon

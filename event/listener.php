@@ -3,7 +3,7 @@
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension
- * @copyright	(c) 2019-2024 Sylver35  https://breizhcode.com
+ * @copyright	(c) 2019-2025 Sylver35  https://breizhcode.com
  * @license		http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  */
 
@@ -106,8 +106,8 @@ class listener implements EventSubscriberInterface
 			'S_IN_AJAX_CHECKS'			=> true,
 			'S_IN_AJAX_CHECKS_REGISTER'	=> false,
 			'S_IN_AJAX_CHECKS_DETAILS'	=> true,
-			'S_CHANGE_EMAIL_ON'			=> ($this->auth->acl_get('u_chgemail')) ? true : false,
-			'S_CHANGE_PASSWORD_ON'		=> ($this->auth->acl_get('u_chgpasswd')) ? true : false,
+			'S_CHANGE_EMAIL_ON'			=> (bool) ($this->auth->acl_get('u_chgemail')),
+			'S_CHANGE_PASSWORD_ON'		=> (bool) ($this->auth->acl_get('u_chgpasswd')),
 			'AJAX_CHECKS_FILE'			=> $this->helper->route('sylver35_ajaxchecks_controller'),
 			'AJAX_CHECKS_PATH'			=> $this->ext_path_web . 'images/',
 			'L_AJAX_CHECK_FROM'			=> $this->language->lang('AJAX_CHECK_FROM', $this->get_version()),

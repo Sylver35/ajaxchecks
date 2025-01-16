@@ -2,7 +2,7 @@
 /**
  * @author		Sylver35 <webmaster@breizhcode.com>
  * @package		Breizh Ajax Checks Extension
- * @copyright	(c) 2019-2024 Sylver35  https://breizhcode.com
+ * @copyright	(c) 2019-2025 Sylver35  https://breizhcode.com
  * @license		http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  */
 
@@ -157,10 +157,11 @@ class ajaxchecks
 	 */
 	public function validation_password($mode, $password1, $password2 = '', $username, $power = false)
 	{
+		// In case of password like username
 		if ($this->work->clean_string($password1) === $this->work->clean_string($username))
 		{
 			$this->work->return_content($mode, 'AJAX_CHECK_PASSWORD_NAME');
-			return;
+			return true;
 		}
 
 		$checkresult = $this->work->validate_password($password1);
